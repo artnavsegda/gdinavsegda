@@ -1,0 +1,65 @@
+#include <windows.h>
+
+Menu MENU
+{
+    POPUP "&File"
+    {
+        MENUITEM "&Open", 3
+		MENUITEM "&Save", 2
+        MENUITEM "&Dialog", 1
+		MENUITEM "&Color", 4
+        MENUITEM "&Exit", 0
+    }
+    POPUP "&View"
+    {
+	MENUITEM "One\a1", 11
+	MENUITEM "Two\a2", 12
+	MENUITEM "Three\a3", 13
+	MENUITEM "Four\a4", 14
+	MENUITEM "Five\a5", 15, CHECKED
+	MENUITEM "Six\a6", 16
+	MENUITEM "Seven\a7", 17
+	MENUITEM "Eight\a8", 18
+	MENUITEM "Nine\a9", 19
+	MENUITEM "Ten\aA", 20 
+	MENUITEM "Eleven\aB", 21
+	MENUITEM "Twelve\aC", 22
+	MENUITEM "Thirteen\aD", 23
+    }
+}
+
+MainDialog DIALOG  10, 10, 200, 150
+STYLE WS_POPUP | WS_BORDER
+CAPTION "Select range"
+{
+	CTEXT "Select One:", 1, 10, 10, 50, 12
+		PUSHBUTTON "&Exit", 2, 25, 30, 60, 12
+		EDITTEXT 3, 25, 50, 60, 12
+		PUSHBUTTON "&Ignore", 4, 25, 80, 60, 12
+		AUTOCHECKBOX "One", 5, 100, 10, 40, 10
+		EDITTEXT 25, 150, 10, 40, 10
+		AUTOCHECKBOX "Two", 6, 100, 20, 40, 10
+		EDITTEXT 26, 150, 20, 40, 10
+		AUTOCHECKBOX "Three", 7, 100, 30, 40, 10
+		EDITTEXT 27, 150, 30, 40, 10
+		AUTOCHECKBOX "Four", 8, 100, 40, 40, 10
+		EDITTEXT 28, 150, 40, 40, 10
+		AUTOCHECKBOX "Five", 9, 100, 50, 40, 10
+		EDITTEXT 29, 150, 50, 40, 10
+		AUTOCHECKBOX "Six", 10, 100, 60, 40, 10
+		EDITTEXT 30, 150, 60, 40, 10
+		AUTOCHECKBOX "Seven", 11, 100, 70, 40, 10
+		EDITTEXT 31, 150, 70, 40, 10
+		AUTOCHECKBOX "Eight", 12, 100, 80, 40, 10
+		EDITTEXT 32, 150, 80, 40, 10
+		AUTOCHECKBOX "Nine", 13, 100, 90, 40, 10
+		EDITTEXT 33, 150, 90, 40, 10
+		AUTOCHECKBOX "Ten", 14, 100, 100, 40, 10
+		EDITTEXT 34, 150, 100, 40, 10
+		AUTOCHECKBOX "Eleven", 15, 100, 110, 40, 10
+		EDITTEXT 35, 150, 110, 40, 10
+		AUTOCHECKBOX "Twelve", 16, 100, 120, 40, 10
+		EDITTEXT 36, 150, 120, 40, 10
+		AUTOCHECKBOX "Therteen", 17, 100, 130, 40, 10
+		EDITTEXT 37, 150, 130, 40, 10
+}

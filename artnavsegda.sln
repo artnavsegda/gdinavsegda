@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "winhello", "winhello\winhello.vcxproj", "{44AA5F3B-0707-472D-995B-9C7B16E46B75}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glhello", "glhello\glhello.vcxproj", "{6521B0CC-BCCD-435E-9029-1A2D8524E6A1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gldouble", "gldouble\gldouble.vcxproj", "{5AC5792C-ECA1-48C5-B48D-30FCB1EEBF90}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gltouch", "gltouch\gltouch.vcxproj", "{2DFA4284-F887-44BE-92FE-6AF57B466009}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glchota", "glchota\glchota.vcxproj", "{19D5E846-FC60-4F9A-9396-0174589F5A69}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{44AA5F3B-0707-472D-995B-9C7B16E46B75}.Release|x86.ActiveCfg = Release|Win32
+		{44AA5F3B-0707-472D-995B-9C7B16E46B75}.Release|x86.Build.0 = Release|Win32
+		{6521B0CC-BCCD-435E-9029-1A2D8524E6A1}.Release|x86.ActiveCfg = Release|Win32
+		{6521B0CC-BCCD-435E-9029-1A2D8524E6A1}.Release|x86.Build.0 = Release|Win32
+		{5AC5792C-ECA1-48C5-B48D-30FCB1EEBF90}.Release|x86.ActiveCfg = Release|Win32
+		{5AC5792C-ECA1-48C5-B48D-30FCB1EEBF90}.Release|x86.Build.0 = Release|Win32
+		{2DFA4284-F887-44BE-92FE-6AF57B466009}.Release|x86.ActiveCfg = Release|Win32
+		{2DFA4284-F887-44BE-92FE-6AF57B466009}.Release|x86.Build.0 = Release|Win32
+		{19D5E846-FC60-4F9A-9396-0174589F5A69}.Release|x86.ActiveCfg = Release|Win32
+		{19D5E846-FC60-4F9A-9396-0174589F5A69}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
