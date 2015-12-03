@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <shlwapi.h>
 #include <windows.h>
 #include <windowsx.h>
 #include <gl\gl.h>
@@ -190,6 +191,100 @@ int developmassive(char filename[])
 	return 0;
 }
 
+int developbinary(char filename[])
+{
+	unsigned char buf[100];
+	short sbuf[100];
+	l = 0;
+	FILE *sora;
+	//	sora = fopen("./chota.txt","r");
+	sora = fopen(filename, "rb");
+	if (sora == NULL)
+	{
+		printf("fucking error");
+		exit(0);
+	}
+	else
+		open = 1;
+	developmetrics(filename);
+	//makedefaultmetrics();
+	memset(max, 0, sizeof(max));
+	memset(max, 0, sizeof(min));
+	while (1)
+	{
+		fread(buf, 1, 1, sora);
+		if (buf[0] == 0xf4)
+		{
+			//	printf("%hhx start\n",buf[0]);
+		}
+		else
+			break;
+		fread(buf, 6, 1, sora);
+		if (buf[0] >= 0x30)
+			buf[0] -= 0x10;
+		if (buf[1] >= 0x30)
+			buf[1] -= 0x10;
+		{
+			//printf("%hhu%hhu:%hhu%hhu:%hhu%hhu ", buf[0] - 0x20, buf[1] - 0x20, buf[2] - 0x30, buf[3] - 0x30, buf[4] - 0x30, buf[5] - 0x30);
+		}
+		fread(buf, 1, 1, sora);
+		if (buf[0] == 0xa5)
+		{
+			//	printf("%hhx marker\n",buf[0]);
+		}
+		else
+			break;
+		fread(sbuf, 20, 1, sora);
+		fread(buf, 3, 1, sora);
+		if (buf[2] == 0xb5)
+		{
+			//	printf("%hhx marker\n",buf[0]);
+		}
+		else
+			break;
+		//printf("%hhu %hu %hu %hu %hd %hu %hu %hu %hu %hu %hu %hu %hhu %hhu\n", (char)0xa5, sbuf[0], sbuf[1], sbuf[2], sbuf[3], sbuf[4], sbuf[5], sbuf[6], sbuf[7], sbuf[8], sbuf[9], sbuf[10], buf[0], buf[1]);
+		m[1][l] = (unsigned char)0xa5;
+		m[2][l] = (unsigned short)sbuf[0];
+		m[3][l] = (unsigned short)sbuf[1];
+		m[4][l] = (unsigned short)sbuf[2];
+		m[5][l] = (signed short)sbuf[3];
+		m[6][l] = (unsigned short)sbuf[4];
+		m[7][l] = (unsigned short)sbuf[5];
+		m[8][l] = (unsigned short)sbuf[6];
+		m[9][l] = (unsigned short)sbuf[7];
+		m[10][l] = (unsigned short)sbuf[8];
+		m[11][l] = (unsigned short)sbuf[9];
+		m[12][l] = (unsigned short)sbuf[10];
+		m[13][l] = buf[0];
+		m[14][l] = buf[1];
+
+		fread(buf, 4, 1, sora);
+		//printf("incoming data %hhx %hhx %hhx %hhx\n",   buf[0], buf[1], buf[2], buf[3]);
+		fread(buf, 1, 1, sora);
+		if (buf[0] == 0xf8)
+		{
+			//	printf("%hhx stop\n",buf[0]);
+		}
+		else
+			break;
+		for (int i = 1; i <= 13; i++)
+		{
+			if (min[i] == 0) min[i] = m[i][l];
+			if (max[i] == 0) max[i] = m[i][l];
+			if (m[i][l]<min[i]) min[i] = m[i][l];
+			if (m[i][l]>max[i]) max[i] = m[i][l];
+		}
+		if (l++ > MAXLENGTH)
+			break;
+	}
+	printf("length is %d\n", l);
+	for (int i = 1; i <= 13; i++)
+		printf("%d: min %d, max %d, span %d\n", i, min[i], max[i], max[i] - min[i]);
+	fclose(sora);
+	makelists();
+	return 0;
+}
+
 BOOL CALLBACK DialogFunc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam) 
 { 
 	char workstring[100];
@@ -376,8 +471,10 @@ int openrecent(HWND hwnd)
 	//GetPrivateProfileInt("window", "width", 300, configfile);
 	if (strcmp(filename, "default") == 0)
 		SendMessage(hwnd, WM_COMMAND, 3, 0);
-	else
+	else if (_stricmp(".txt", PathFindExtension(filename)) == 0)
 		developmassive(filename);
+	else if (_stricmp(".bin", PathFindExtension(filename)) == 0)
+		developbinary(filename);
 	return 0;
 }
 
@@ -524,7 +621,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			ofn.lpstrFile = szFile;
 			ofn.lpstrFile[0] = '\0';
 			ofn.nMaxFile = sizeof(szFile);
-			ofn.lpstrFilter = "Text\0*.TXT\0All\0*.*\0";
+			ofn.lpstrFilter = "Text\0*.TXT\0Binary\0*.BIN\0All\0*.*\0";
 			ofn.nFilterIndex = 1;
 			ofn.lpstrFileTitle = NULL;
 			ofn.nMaxFileTitle = 0;
@@ -533,7 +630,19 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			if (GetOpenFileName(&ofn) == TRUE)
 			{
 				WritePrivateProfileString("window", "filename", ofn.lpstrFile, configfile);
-				developmassive(ofn.lpstrFile);
+				if (_stricmp(".txt", PathFindExtension(ofn.lpstrFile)) == 0)
+				{
+					developmassive(ofn.lpstrFile);
+				}
+				else if (_stricmp(".bin", PathFindExtension(ofn.lpstrFile)) == 0)
+				{
+					developbinary(ofn.lpstrFile);
+				}
+				else
+				{
+					MessageBox(hwnd, "Not a text file", "message", MB_OK);
+				}
+				xscale = (float)xwidth / (float)l;
 				InvalidateRect(hwnd, NULL, TRUE);
 			}
 			//else
@@ -600,9 +709,21 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			glEndList();
 		}
 		glListBase(fontOffset);
-		openrecent(hwnd);
+		//openrecent(hwnd);
+
+		char filename[260];
+		//WritePrivateProfileString("window", "filename", ofn.lpstrFile, configfile);
+		GetPrivateProfileString("window", "filename", "default", filename, 260, configfile);
+		//GetPrivateProfileInt("window", "width", 300, configfile);
+		if (strcmp(filename, "default") == 0)
+			SendMessage(hwnd, WM_COMMAND, 3, 0);
+		else if (_stricmp(".txt", PathFindExtension(filename)) == 0)
+			developmassive(filename);
+		else if (_stricmp(".bin", PathFindExtension(filename)) == 0)
+			developbinary(filename);
+		else 
+			SendMessage(hwnd, WM_COMMAND,3,0);
 		InvalidateRect(hwnd, NULL, TRUE);
-		//SendMessage(hwnd, WM_COMMAND,3,0);
 		break;
 	case WM_DESTROY:
 		WritePrivateProfileInt("window", "height", yheight, configfile);

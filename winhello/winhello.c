@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <windowsx.h>
 #include <stdio.h>
+#include <shlwapi.h>
 #include "winhello.h"
 
 char configfile[] = ".\\winhello.ini";
@@ -27,6 +28,29 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				case ID_EXIT:
 					DestroyWindow(hwnd);
 				break;
+				case 3:
+					;
+					OPENFILENAME ofn;
+					char szFile[260];
+					ZeroMemory(&ofn, sizeof(ofn));
+					ofn.lStructSize = sizeof(ofn);
+					ofn.hwndOwner = hwnd;
+					ofn.lpstrFile = szFile;
+					ofn.lpstrFile[0] = '\0';
+					ofn.nMaxFile = sizeof(szFile);
+					ofn.lpstrFilter = "Text\0*.TXT\0All\0*.*\0";
+					ofn.nFilterIndex = 1;
+					ofn.lpstrFileTitle = NULL;
+					ofn.nMaxFileTitle = 0;
+					ofn.lpstrInitialDir = NULL;
+					ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+					if (GetOpenFileName(&ofn) == TRUE)
+					{
+						if (_stricmp(".txt", PathFindExtension(ofn.lpstrFile))==0)
+							MessageBox(hwnd,"Text file","message",MB_OK);
+						//developmassive(ofn.lpstrFile);
+					}
+					break;
 				case 11:
 				case 12:
 				case 13:

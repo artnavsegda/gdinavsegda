@@ -16,6 +16,9 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ItemGroup>
+    <Library Include="shlwapi.lib" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="winhello.c" />
   </ItemGroup>
   <ItemGroup>
