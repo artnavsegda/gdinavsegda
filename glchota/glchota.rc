@@ -16,7 +16,7 @@ Menu MENU
 	MENUITEM "Two\a2", 12
 	MENUITEM "Three\a3", 13
 	MENUITEM "Four\a4", 14
-	MENUITEM "Five\a5", 15, CHECKED
+	MENUITEM "Five\a5", 15
 	MENUITEM "Six\a6", 16
 	MENUITEM "Seven\a7", 17
 	MENUITEM "Eight\a8", 18

@@ -58,34 +58,32 @@ int level[20];
 
 char globalmetricsfilename[255];
 
-int bindecode(HWND hwnd)
+int bindecode(HWND hwnd, unsigned int yo)
 {
-	unsigned int yo = 0;
-
 	for (int i = 1; i <= 13; i++)
 	{
 		int state = 0;
 		
-		state = yo > i & 1;
+		state = (yo >> i) & 1;
 
-		if (state == 1);
+		if (state == 1)
 			CheckMenuItem(GetMenu(hwnd), i + 10, MF_BYCOMMAND | MF_CHECKED);
 	}
 
 	return 0;
 }
 
-int binencode(HWND hwnd)
+unsigned int binencode(HWND hwnd)
 {
 	unsigned int yo = 0;
 
 	for (int i = 1; i <= 13; i++)
 	{
-		int state = GetMenuState(GetMenu(hwnd), i + 10, MF_BYCOMMAND) & MF_CHECKED;
-		yo = yo + state < i;
+		if (GetMenuState(GetMenu(hwnd), i + 10, MF_BYCOMMAND) & MF_CHECKED)
+		yo = yo | (1 << i);
 	}
 
-	return 0;
+	return yo;
 }
 
 int writemetrics(char filemetricsname[])
@@ -717,6 +715,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 		glListBase(fontOffset);
 		//openrecent(hwnd);
+		bindecode(hwnd, GetPrivateProfileInt("window", "state", 0, configfile));
 
 		char filename[260];
 		//WritePrivateProfileString("window", "filename", ofn.lpstrFile, configfile);
@@ -735,6 +734,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 		WritePrivateProfileInt("window", "height", yheight, configfile);
 		WritePrivateProfileInt("window", "width", xwidth, configfile);
+		WritePrivateProfileInt("window", "state", binencode(hwnd), configfile);
 		wglMakeCurrent(hDC, NULL);
 		wglDeleteContext(hRC);
 		if (open == 1)
