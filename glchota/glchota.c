@@ -41,6 +41,7 @@ double xpos = 0.0;
 float dscale = 1.0;
 
 int m[20][901000];
+char mtime[901000][50];
 int max[20];
 int min[20];
 int col[20];
@@ -155,8 +156,11 @@ int makelists()
 	return 0;
 }
 
+int binary = 0;
+
 int developmassive(char filename[])
 {
+	binary = 0;
 	l = 0;
 	FILE *sora;
 //	sora = fopen("./chota.txt","r");
@@ -194,6 +198,7 @@ int developmassive(char filename[])
 
 int developbinary(char filename[])
 {
+	binary = 1;
 	unsigned char buf[100];
 	short sbuf[100];
 	l = 0;
@@ -226,6 +231,7 @@ int developbinary(char filename[])
 		if (buf[1] >= 0x30)
 			buf[1] -= 0x10;
 		{
+			snprintf(mtime[l], 50, "%hhu%hhu:%hhu%hhu:%hhu%hhu ", buf[0] - 0x20, buf[1] - 0x20, buf[2] - 0x30, buf[3] - 0x30, buf[4] - 0x30, buf[5] - 0x30);
 			//printf("%hhu%hhu:%hhu%hhu:%hhu%hhu ", buf[0] - 0x20, buf[1] - 0x20, buf[2] - 0x30, buf[3] - 0x30, buf[4] - 0x30, buf[5] - 0x30);
 		}
 		fread(buf, 1, 1, sora);
@@ -547,6 +553,11 @@ int render(HWND hwnd)
 	snprintf(string, 77, "%5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d", m[1][(int)sourcex], m[2][(int)sourcex], m[3][(int)sourcex], m[4][(int)sourcex], m[5][(int)sourcex], m[6][(int)sourcex], m[7][(int)sourcex], m[8][(int)sourcex], m[9][(int)sourcex], m[10][(int)sourcex], m[11][(int)sourcex], m[12][(int)sourcex], m[13][(int)sourcex]);
 	//snprintf(string, 10, "%9d", m[leveli][(int)sourcex]);
 	glCallLists(77, GL_UNSIGNED_BYTE, string);
+	if (binary == 1)
+	{
+		glRasterPos2i(30, 50);
+		glCallLists(50, GL_UNSIGNED_BYTE, mtime[(int)sourcex]);
+	}
 	glPopAttrib();
 
 
@@ -638,10 +649,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				if (_stricmp(".txt", PathFindExtension(ofn.lpstrFile)) == 0)
 				{
 					developmassive(ofn.lpstrFile);
+					SetWindowText(hwnd, ofn.lpstrFile);
 				}
 				else if (_stricmp(".bin", PathFindExtension(ofn.lpstrFile)) == 0)
 				{
 					developbinary(ofn.lpstrFile);
+					SetWindowText(hwnd, ofn.lpstrFile);
 				}
 				else
 				{
@@ -724,9 +737,15 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		if (strcmp(filename, "default") == 0)
 			SendMessage(hwnd, WM_COMMAND, 3, 0);
 		else if (_stricmp(".txt", PathFindExtension(filename)) == 0)
+		{
 			developmassive(filename);
+			SetWindowText(hwnd, filename);
+		}
 		else if (_stricmp(".bin", PathFindExtension(filename)) == 0)
+		{
 			developbinary(filename);
+			SetWindowText(hwnd, filename);
+		}
 		else 
 			SendMessage(hwnd, WM_COMMAND,3,0);
 		InvalidateRect(hwnd, NULL, TRUE);
