@@ -15,8 +15,8 @@ float colors[][3] = { { 255,255,255 },{ 255,255,255 },{ 255,255,255 },{ 255,255,
 
 #define LODWORD(ull) ((DWORD)((ULONGLONG)(ull) & 0x00000000ffffffff))
 
-typedef BOOL(APIENTRY *PFNWGLSWAPINTERVALFARPROC)(int);
-PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT;
+//typedef BOOL(APIENTRY *PFNWGLSWAPINTERVALFARPROC)(int);
+//PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT;
 
 GLuint fontOffset;
 
@@ -33,15 +33,25 @@ HMENU menu;
 HDC hDC;
 HGLRC hRC;
 
-#define MAXLENGTH 900000
+int displaymode = 1;
+
+#define MAXLENGTH 9000000
 int open = 0;
 GLfloat xscale = 1.0;
 GLfloat yscale = 1.0;
 double xpos = 0.0;
 float dscale = 1.0;
 
-int m[20][901000];
-char mtime[901000][50];
+float mousexprev = 0;
+float xscaleprev = 1.0;
+float sourcexprev = 0;
+int yoffset = 0;
+
+POINT first, second;
+DWORD dwarg;
+
+int m[20][9001000];
+char mtime[9001000][50];
 int max[20];
 int min[20];
 int col[20];
@@ -152,6 +162,15 @@ int makelists()
 			glVertex2i(i, m[iz][i]);
 		glEnd();
 		glEndList();
+		GLenum glErr = glGetError();
+		if (glErr != GL_NO_ERROR)
+		{
+			char error[10];
+			snprintf(error, 10, "%d", glErr);
+			MessageBox(NULL, error, "error code", MB_OK);
+			if (glErr == (GLenum)1285)
+				MessageBox(NULL, "out of memory", "opengl error", MB_OK);
+		}
 	}
 	return 0;
 }
@@ -160,6 +179,8 @@ int binary = 0;
 
 int developmassive(char filename[])
 {
+	sourcexprev = 0;
+	xscaleprev = 1.0;
 	binary = 0;
 	l = 0;
 	FILE *sora;
@@ -192,12 +213,16 @@ int developmassive(char filename[])
 	for(int i=1;i<=13;i++)
 		printf("%d: min %d, max %d, span %d\n",i,min[i],max[i],max[i]-min[i]);
 	fclose(sora);
-	makelists();
+	if (displaymode)
+		makelists();
+	xscale = (float)xwidth / (float)l;
 	return 0;
 }
 
 int developbinary(char filename[])
 {
+	sourcexprev = 0;
+	xscaleprev = 1.0;
 	binary = 1;
 	unsigned char buf[100];
 	short sbuf[100];
@@ -288,7 +313,9 @@ int developbinary(char filename[])
 	for (int i = 1; i <= 13; i++)
 		printf("%d: min %d, max %d, span %d\n", i, min[i], max[i], max[i] - min[i]);
 	fclose(sora);
-	makelists();
+	if (displaymode)
+		makelists();
+	xscale = (float)xwidth / (float)l;
 	return 0;
 }
 
@@ -342,125 +369,119 @@ BOOL CALLBACK DialogFunc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lPara
     return FALSE; 
 } 
 
-float mousexprev = 0;
-float xscaleprev = 1.0;
-float sourcexprev = 0;
-int yoffset = 0;
 
-POINT first, second;
-DWORD dwarg;
 
-LRESULT DecodeGesture(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	POINT ptZoomCenter;
-	double k;
-	// Create a structure to populate and retrieve the extra message info.
-	GESTUREINFO gi;
-
-	ZeroMemory(&gi, sizeof(GESTUREINFO));
-
-	gi.cbSize = sizeof(GESTUREINFO);
-
-	BOOL bResult = GetGestureInfo((HGESTUREINFO)lParam, &gi);
-	BOOL bHandled = FALSE;
-
-	if (bResult)
-	{
-		// now interpret the gesture
-		switch (gi.dwID)
-		{
-		case GID_ZOOM:
-			// Code for zooming goes here     
-			switch (gi.dwFlags)
-			{
-			case GF_BEGIN:
-				dwarg = LODWORD(gi.ullArguments);
-				first.x = gi.ptsLocation.x;
-				first.y = gi.ptsLocation.y;
-				ScreenToClient(hWnd, &first);
-				mousex = first.x;
-				break;
-			default:
-				second.x = gi.ptsLocation.x;
-				second.y = gi.ptsLocation.y;
-				ScreenToClient(hWnd, &second);
-				ptZoomCenter.x = (first.x + second.x) / 2;
-				ptZoomCenter.y = (first.y + second.y) / 2;
-				mousex = ptZoomCenter.x;
-				k = (double)(LODWORD(gi.ullArguments)) / (double)(dwarg);
-				//glScalef(k, k, 1.0);
-				xscale = xscale * k;
-				//yscale = yscale * k;
-				InvalidateRect(hWnd, NULL, TRUE);
-				first = second;
-				dwarg = LODWORD(gi.ullArguments);
-				break;
-			}
-			bHandled = TRUE;
-			break;
-		case GID_PAN:
-			// Code for panning goes here
-			switch (gi.dwFlags)
-			{
-			case GF_BEGIN:
-				first.x = gi.ptsLocation.x;
-				first.y = gi.ptsLocation.y;
-				ScreenToClient(hWnd, &first);
-				mousex = first.x;
-				break;
-			default:
-				second.x = gi.ptsLocation.x;
-				second.y = gi.ptsLocation.y;
-				ScreenToClient(hWnd, &second);
-				//glTranslatef(second.x - first.x, first.y - second.y, 0.0);
-
-				mousex = first.x;
-				deltax = first.x - second.x;
-				deltay = first.y - second.y;
-				sourcexprev = sourcexprev + (deltax / xscaleprev);
-				yoffset = yoffset + deltay;
-
-				InvalidateRect(hWnd, NULL, TRUE);
-				first = second;
-				break;
-			}
-			bHandled = TRUE;
-			break;
-		case GID_ROTATE:
-			// Code for rotation goes here
-			bHandled = TRUE;
-			break;
-		case GID_TWOFINGERTAP:
-			// Code for two-finger tap goes here
-			MessageBoxW(hWnd, L"Weehee!", L"two finger tap recieved", MB_OK);
-			bHandled = TRUE;
-			break;
-		case GID_PRESSANDTAP:
-			// Code for roll over goes here
-			bHandled = TRUE;
-			break;
-		default:
-			// A gesture was not recognized
-			break;
-		}
-	}
-	else
-	{
-		DWORD dwErr = GetLastError();
-		if (dwErr > 0)
-		{
-			//MessageBoxW(hWnd, L"Error!", L"Could not retrieve a GESTUREINFO structure.", MB_OK);
-		}
-	}
-	if (bHandled)
-	{
-		return 0;
-	}
-	else
-	{
-		return DefWindowProc(hWnd, message, wParam, lParam);
-	}
-}
+//LRESULT DecodeGesture(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+//{
+//	POINT ptZoomCenter;
+//	double k;
+//	// Create a structure to populate and retrieve the extra message info.
+//	GESTUREINFO gi;
+//
+//	ZeroMemory(&gi, sizeof(GESTUREINFO));
+//
+//	gi.cbSize = sizeof(GESTUREINFO);
+//
+//	BOOL bResult = GetGestureInfo((HGESTUREINFO)lParam, &gi);
+//	BOOL bHandled = FALSE;
+//
+//	if (bResult)
+//	{
+//		// now interpret the gesture
+//		switch (gi.dwID)
+//		{
+//		case GID_ZOOM:
+//			// Code for zooming goes here     
+//			switch (gi.dwFlags)
+//			{
+//			case GF_BEGIN:
+//				dwarg = LODWORD(gi.ullArguments);
+//				first.x = gi.ptsLocation.x;
+//				first.y = gi.ptsLocation.y;
+//				ScreenToClient(hWnd, &first);
+//				mousex = first.x;
+//				break;
+//			default:
+//				second.x = gi.ptsLocation.x;
+//				second.y = gi.ptsLocation.y;
+//				ScreenToClient(hWnd, &second);
+//				ptZoomCenter.x = (first.x + second.x) / 2;
+//				ptZoomCenter.y = (first.y + second.y) / 2;
+//				mousex = ptZoomCenter.x;
+//				k = (double)(LODWORD(gi.ullArguments)) / (double)(dwarg);
+//				//glScalef(k, k, 1.0);
+//				xscale = xscale * k;
+//				//yscale = yscale * k;
+//				InvalidateRect(hWnd, NULL, TRUE);
+//				first = second;
+//				dwarg = LODWORD(gi.ullArguments);
+//				break;
+//			}
+//			bHandled = TRUE;
+//			break;
+//		case GID_PAN:
+//			// Code for panning goes here
+//			switch (gi.dwFlags)
+//			{
+//			case GF_BEGIN:
+//				first.x = gi.ptsLocation.x;
+//				first.y = gi.ptsLocation.y;
+//				ScreenToClient(hWnd, &first);
+//				mousex = first.x;
+//				break;
+//			default:
+//				second.x = gi.ptsLocation.x;
+//				second.y = gi.ptsLocation.y;
+//				ScreenToClient(hWnd, &second);
+//				//glTranslatef(second.x - first.x, first.y - second.y, 0.0);
+//
+//				mousex = first.x;
+//				deltax = first.x - second.x;
+//				deltay = first.y - second.y;
+//				sourcexprev = sourcexprev + (deltax / xscaleprev);
+//				yoffset = yoffset + deltay;
+//
+//				InvalidateRect(hWnd, NULL, TRUE);
+//				first = second;
+//				break;
+//			}
+//			bHandled = TRUE;
+//			break;
+//		case GID_ROTATE:
+//			// Code for rotation goes here
+//			bHandled = TRUE;
+//			break;
+//		case GID_TWOFINGERTAP:
+//			// Code for two-finger tap goes here
+//			MessageBoxW(hWnd, L"Weehee!", L"two finger tap recieved", MB_OK);
+//			bHandled = TRUE;
+//			break;
+//		case GID_PRESSANDTAP:
+//			// Code for roll over goes here
+//			bHandled = TRUE;
+//			break;
+//		default:
+//			// A gesture was not recognized
+//			break;
+//		}
+//	}
+//	else
+//	{
+//		DWORD dwErr = GetLastError();
+//		if (dwErr > 0)
+//		{
+//			//MessageBoxW(hWnd, L"Error!", L"Could not retrieve a GESTUREINFO structure.", MB_OK);
+//		}
+//	}
+//	if (bHandled)
+//	{
+//		return 0;
+//	}
+//	else
+//	{
+//		return DefWindowProc(hWnd, message, wParam, lParam);
+//	}
+//}
 
 float sourcetodest(float source)
 {
@@ -489,38 +510,39 @@ static DWORD rgbCurrent = 0x00ffff00;        // initial color selection
 
 int render(HWND hwnd)
 {
-	//double scaleX = (double)xwidth / (double)l;
-	//double scaleY = 300 / yheight;
-	//float destx = xwidth / 2;
-	double destx = mousex;
-	double desty = yheight / 2;
-	//float sourcex = l / ((float)xwidth / (float)mousex);
-	double sourcex = sourcetodest(destx);
-	//double sourcey = 150;
-	double sourcey = 0;
-
-	mousexprev = mousex;
-	xscaleprev = xscale;
-	sourcexprev = sourcex;
-
 	glClear(GL_COLOR_BUFFER_BIT);
-	glColor3f(1.0, 1.0, 1.0);
-	glPushMatrix();
-	glTranslatef(destx, desty+yoffset, 0.0);
-	glScalef(xscale, yscale, 1.0);
-	glTranslatef(sourcex * -1.0, sourcey * -1.0, 0.0);
-
-	glBegin(GL_LINES);
-	glVertex2i(0, 0);
-	glVertex2i(l, 0);
-	glEnd();
-
 	if (open == 1)
 	{
+		//double scaleX = (double)xwidth / (double)l;
+		//double scaleY = 300 / yheight;
+		//float destx = xwidth / 2;
+		double destx = mousex;
+		double desty = yheight / 2;
+		//float sourcex = l / ((float)xwidth / (float)mousex);
+		double sourcex = sourcetodest(destx);
+		//double sourcey = 150;
+		double sourcey = 0;
+
+		mousexprev = mousex;
+		xscaleprev = xscale;
+		sourcexprev = sourcex;
+
+		glColor3f(1.0, 1.0, 1.0);
+		glPushMatrix();
+		glTranslatef(destx, desty + yoffset, 0.0);
+		glScalef(xscale, yscale, 1.0);
+		glTranslatef(sourcex * -1.0, sourcey * -1.0, 0.0);
+
+		glBegin(GL_LINES);
+		glVertex2i(0, 0);
+		glVertex2i(l, 0);
+		glEnd();
+
+
 		for (int iz = 1; iz <= 13; iz++)
 		{
 			if (GetMenuState(GetMenu(hwnd), iz + 10, MF_BYCOMMAND) & MF_CHECKED)
-			//if (iz == 13)
+				//if (iz == 13)
 			{
 				glPushMatrix();
 				glTranslatef(0.0, level[iz], 0.0);
@@ -528,39 +550,41 @@ int render(HWND hwnd)
 					glColor3ub(255, 255, 0);
 				else
 					glColor3ub(colors[iz][1], colors[iz][2], colors[iz][3]);
-				/*glBegin(GL_LINE_STRIP);
-				for (int i = 0; i<l; i++)
-					glVertex2i(i, m[iz][i]);
-				glEnd();*/
-				glCallList(lines[iz]);
+				if (displaymode)
+					glCallList(lines[iz]);
+				else
+				{
+					glBegin(GL_LINE_STRIP);
+					for (int i = 0; i < l; i++)
+						glVertex2i(i, m[iz][i]);
+					glEnd();
+				}
 				glPopMatrix();
 			}
 		}
 
+		glPopMatrix();
+		glColor3f(1.0, 1.0, 1.0);
+
+		char string[100];
+
+		glRasterPos2i(10, 10);
+		glPushAttrib(GL_LIST_BIT);
+		glListBase(fontOffset);
+		snprintf(string, 10, "%9d", (int)sourcex);
+		glCallLists(10, GL_UNSIGNED_BYTE, string);
+		glRasterPos2i(10, 30);
+		//165 608 29 882 27 34 273 1545 9984 34 34 8 197
+		snprintf(string, 77, "%5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d", m[1][(int)sourcex], m[2][(int)sourcex], m[3][(int)sourcex], m[4][(int)sourcex], m[5][(int)sourcex], m[6][(int)sourcex], m[7][(int)sourcex], m[8][(int)sourcex], m[9][(int)sourcex], m[10][(int)sourcex], m[11][(int)sourcex], m[12][(int)sourcex], m[13][(int)sourcex]);
+		//snprintf(string, 10, "%9d", m[leveli][(int)sourcex]);
+		glCallLists(77, GL_UNSIGNED_BYTE, string);
+		if (binary == 1)
+		{
+			glRasterPos2i(30, 50);
+			glCallLists(50, GL_UNSIGNED_BYTE, mtime[(int)sourcex]);
+		}
+		glPopAttrib();
 	}
-	glPopMatrix();
-	glColor3f(1.0, 1.0, 1.0);
-
-	char string[100];
-
-	glRasterPos2i(10, 10);
-	glPushAttrib(GL_LIST_BIT);
-	glListBase(fontOffset);
-	snprintf(string, 10, "%9d", (int)sourcex);
-	glCallLists(10, GL_UNSIGNED_BYTE, string);
-	glRasterPos2i(10, 30);
-	//165 608 29 882 27 34 273 1545 9984 34 34 8 197
-	snprintf(string, 77, "%5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d", m[1][(int)sourcex], m[2][(int)sourcex], m[3][(int)sourcex], m[4][(int)sourcex], m[5][(int)sourcex], m[6][(int)sourcex], m[7][(int)sourcex], m[8][(int)sourcex], m[9][(int)sourcex], m[10][(int)sourcex], m[11][(int)sourcex], m[12][(int)sourcex], m[13][(int)sourcex]);
-	//snprintf(string, 10, "%9d", m[leveli][(int)sourcex]);
-	glCallLists(77, GL_UNSIGNED_BYTE, string);
-	if (binary == 1)
-	{
-		glRasterPos2i(30, 50);
-		glCallLists(50, GL_UNSIGNED_BYTE, mtime[(int)sourcex]);
-	}
-	glPopAttrib();
-
-
 	glBegin(GL_LINES);
 	glVertex2i(mousex, 0);
 	glVertex2i(mousex, yheight);
@@ -660,7 +684,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				{
 					MessageBox(hwnd, "Not a text file", "message", MB_OK);
 				}
-				xscale = (float)xwidth / (float)l;
+				//xscale = (float)xwidth / (float)l;
 				InvalidateRect(hwnd, NULL, TRUE);
 			}
 			//else
@@ -711,13 +735,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_CREATE:
+		DragAcceptFiles(hwnd, TRUE);
 		hDC = GetDC(hwnd);
 		PIXELFORMATDESCRIPTOR pfd = { sizeof(PIXELFORMATDESCRIPTOR),1,PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,PFD_TYPE_RGBA,8,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,PFD_MAIN_PLANE,0,0,0,0 };
 		SetPixelFormat(hDC, ChoosePixelFormat(hDC, &pfd), &pfd);
 		hRC = wglCreateContext(hDC);
 		wglMakeCurrent(hDC, hRC);
-		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)wglGetProcAddress("wglSwapIntervalEXT");
-		wglSwapIntervalEXT(VSYNC);
+//		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)wglGetProcAddress("wglSwapIntervalEXT");
+//		wglSwapIntervalEXT(VSYNC);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		fontOffset = glGenLists(128);
 		for (GLuint i = 32; i < 127; i++)
@@ -729,31 +754,37 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		glListBase(fontOffset);
 		//openrecent(hwnd);
 		bindecode(hwnd, GetPrivateProfileInt("window", "state", 0, configfile));
+		displaymode = GetPrivateProfileInt("window", "mode", 1, configfile);
 
-		char filename[260];
-		//WritePrivateProfileString("window", "filename", ofn.lpstrFile, configfile);
-		GetPrivateProfileString("window", "filename", "default", filename, 260, configfile);
-		//GetPrivateProfileInt("window", "width", 300, configfile);
-		if (strcmp(filename, "default") == 0)
-			SendMessage(hwnd, WM_COMMAND, 3, 0);
-		else if (_stricmp(".txt", PathFindExtension(filename)) == 0)
+		/*char filename[260];
+		if (GetPrivateProfileInt("window", "openrecent", 1, configfile))
 		{
-			developmassive(filename);
-			SetWindowText(hwnd, filename);
+			GetPrivateProfileString("window", "filename", "default", filename, 260, configfile);
+			//GetPrivateProfileInt("window", "width", 300, configfile);
+			if (strcmp(filename, "default") == 0)
+				SendMessage(hwnd, WM_COMMAND, 3, 0);
+			else if (_stricmp(".txt", PathFindExtension(filename)) == 0)
+			{
+				developmassive(filename);
+				SetWindowText(hwnd, filename);
+			}
+			else if (_stricmp(".bin", PathFindExtension(filename)) == 0)
+			{
+				developbinary(filename);
+				SetWindowText(hwnd, filename);
+			}
+			else
+				SendMessage(hwnd, WM_COMMAND, 3, 0);
 		}
-		else if (_stricmp(".bin", PathFindExtension(filename)) == 0)
-		{
-			developbinary(filename);
-			SetWindowText(hwnd, filename);
-		}
-		else 
-			SendMessage(hwnd, WM_COMMAND,3,0);
+		else
+			SendMessage(hwnd, WM_COMMAND, 3, 0);*/
 		InvalidateRect(hwnd, NULL, TRUE);
 		break;
 	case WM_DESTROY:
 		WritePrivateProfileInt("window", "height", yheight, configfile);
 		WritePrivateProfileInt("window", "width", xwidth, configfile);
 		WritePrivateProfileInt("window", "state", binencode(hwnd), configfile);
+		WritePrivateProfileInt("window", "mode", displaymode, configfile);
 		wglMakeCurrent(hDC, NULL);
 		wglDeleteContext(hRC);
 		if (open == 1)
@@ -762,14 +793,50 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 		PostQuitMessage(0);
 		break;
-	case WM_GESTURENOTIFY:
-		GESTURECONFIG gc = { 0, GC_ALLGESTURES, 0 };
-		SetGestureConfig(hwnd, 0, 1, &gc, sizeof(GESTURECONFIG));
-		return DefWindowProc(hwnd, WM_GESTURENOTIFY, wParam, lParam);
+	case WM_DROPFILES:
+		sourcexprev = 0;
+		xscaleprev = 1.0;
+		TCHAR lpszFile[MAX_PATH] = { 0 };
+		UINT uFile = 0;
+		HDROP hDrop = (HDROP)wParam;
+
+		uFile = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, NULL);
+		if (uFile != 1) {
+			MessageBox(hwnd, "Dropping multiple files is not supported.", NULL, MB_ICONERROR);
+			DragFinish(hDrop);
+			break;
+		}
+		lpszFile[0] = '\0';
+		if (DragQueryFile(hDrop, 0, lpszFile, MAX_PATH))
+		{
+			WritePrivateProfileString("window", "filename", lpszFile, configfile);
+			if (_stricmp(".txt", PathFindExtension(lpszFile)) == 0)
+			{
+				developmassive(lpszFile);
+				SetWindowText(hwnd, lpszFile);
+			}
+			else if (_stricmp(".bin", PathFindExtension(lpszFile)) == 0)
+			{
+				developbinary(lpszFile);
+				SetWindowText(hwnd, lpszFile);
+			}
+			else
+			{
+				MessageBox(hwnd, "Not a log file", lpszFile, MB_OK);
+			}
+		}
+
+		DragFinish(hDrop);
+		InvalidateRect(hwnd, NULL, TRUE);
 		break;
-	case WM_GESTURE:
-		return DecodeGesture(hwnd, msg, wParam, lParam);
-		break;
+	//case WM_GESTURENOTIFY:
+	//	GESTURECONFIG gc = { 0, GC_ALLGESTURES, 0 };
+	//	SetGestureConfig(hwnd, 0, 1, &gc, sizeof(GESTURECONFIG));
+	//	return DefWindowProc(hwnd, WM_GESTURENOTIFY, wParam, lParam);
+	//	break;
+	//case WM_GESTURE:
+	//	return DecodeGesture(hwnd, msg, wParam, lParam);
+	//	break;
 	case WM_KEYDOWN:
 		if (GetKeyState(VK_CONTROL)<0)
 			switch (wParam)
@@ -940,10 +1007,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		InvalidateRect(hwnd, NULL, TRUE);
 		break;
 	case WM_PAINT:
-		{
 			render(hwnd);
 			ValidateRect(hwnd,NULL);
-		}
 		break;
 	case WM_SIZE:
 		xwidth = LOWORD(lParam);
@@ -951,6 +1016,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		glViewport(0, 0, LOWORD(lParam), HIWORD(lParam));
 		glLoadIdentity();
 		gluOrtho2D(0.0, (GLdouble)LOWORD(lParam), 0.0, (GLdouble)HIWORD(lParam));
+		mousex = 0;
 		xscale = (float)xwidth / (float)l;
 		InvalidateRect(hwnd, NULL, TRUE);
 		break;
@@ -967,8 +1033,44 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 	WNDCLASS wc = {CS_DBLCLKS,WindowProc,0,0,hInstance,LoadIcon(hInstance, "Window"),LoadCursor(NULL, IDC_ARROW),CreateSolidBrush(RGB(0,0,0)),"Menu","MainWindowClass"};
 	RegisterClass(&wc);
 	menu = GetSubMenu(LoadMenu(hInstance,"Menu"),0);
-	hwnd = CreateWindow("MainWindowClass","Window",WS_OVERLAPPEDWINDOW,CW_USEDEFAULT,CW_USEDEFAULT,GetPrivateProfileInt("window","width",300,configfile),GetPrivateProfileInt("window","height",300,configfile),NULL,NULL,hInstance,NULL);
+	xwidth = GetPrivateProfileInt("window", "width", 300, configfile);
+	yheight = GetPrivateProfileInt("window", "height", 300, configfile);
+	hwnd = CreateWindow("MainWindowClass","Window",WS_OVERLAPPEDWINDOW,CW_USEDEFAULT,CW_USEDEFAULT,xwidth,yheight,NULL,NULL,hInstance,NULL);
 	ShowWindow(hwnd,SW_SHOWDEFAULT);
+	PathUnquoteSpaces(lpCmdLine);
+	if (_stricmp(".txt", PathFindExtension(lpCmdLine)) == 0)
+	{
+		developmassive(lpCmdLine);
+		InvalidateRect(hwnd, NULL, TRUE);
+		SetWindowText(hwnd, lpCmdLine);
+	}
+	else if (_stricmp(".bin", PathFindExtension(lpCmdLine)) == 0)
+	{
+		developbinary(lpCmdLine);
+		InvalidateRect(hwnd, NULL, TRUE);
+		SetWindowText(hwnd, lpCmdLine);
+	}
+	else if (GetPrivateProfileInt("window", "openrecent", 1, configfile))
+	{
+		char filename[260];
+		GetPrivateProfileString("window", "filename", "default", filename, 260, configfile);
+		if (strcmp(filename, "default") == 0)
+			SendMessage(hwnd, WM_COMMAND, 3, 0);
+		else if (_stricmp(".txt", PathFindExtension(filename)) == 0)
+		{
+			developmassive(filename);
+			SetWindowText(hwnd, filename);
+		}
+		else if (_stricmp(".bin", PathFindExtension(filename)) == 0)
+		{
+			developbinary(filename);
+			SetWindowText(hwnd, filename);
+		}
+		else
+			SendMessage(hwnd, WM_COMMAND, 3, 0);
+	}
+	else
+		SendMessage(hwnd, WM_COMMAND, 3, 0);
 	while(GetMessage(&Msg, NULL, 0, 0) > 0)
 	{
 		TranslateMessage(&Msg);

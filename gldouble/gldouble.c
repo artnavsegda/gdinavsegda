@@ -4,8 +4,8 @@
 #include <GL/glu.h>
 #pragma comment(lib, "glu32.lib")
 
-typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)(int);
-PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT;
+//typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)(int);
+//PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT;
 
 HDC hDC;
 HGLRC hRC;
@@ -65,8 +65,8 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT	message,WPARAM	wParam,LPARAM	lParam)
 		SetPixelFormat(hDC, ChoosePixelFormat(hDC, &pfd), &pfd);
 		hRC = wglCreateContext(hDC);
 		wglMakeCurrent(hDC, hRC);
-		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)wglGetProcAddress("wglSwapIntervalEXT");
-		wglSwapIntervalEXT(1);
+//		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)wglGetProcAddress("wglSwapIntervalEXT");
+//		wglSwapIntervalEXT(1);
 		myList = glGenLists(1);
 		glNewList(myList, GL_COMPILE);
 		glBegin(GL_LINE_LOOP);

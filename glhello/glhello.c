@@ -9,8 +9,8 @@
 
 #define VSYNC 0
 
-typedef BOOL(APIENTRY *PFNWGLSWAPINTERVALFARPROC)(int);
-PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT;
+//typedef BOOL(APIENTRY *PFNWGLSWAPINTERVALFARPROC)(int);
+//PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT;
 
 GLuint fontOffset;
 char configfile[] = ".\\glhello.ini";
@@ -114,8 +114,8 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT	message,WPARAM wParam,LPARAM lParam)
 		SetPixelFormat(hDC, ChoosePixelFormat(hDC, &pfd), &pfd);
 		hRC = wglCreateContext(hDC);
 		wglMakeCurrent(hDC, hRC);
-		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)wglGetProcAddress("wglSwapIntervalEXT");
-		wglSwapIntervalEXT(VSYNC);
+//		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)wglGetProcAddress("wglSwapIntervalEXT");
+//		wglSwapIntervalEXT(VSYNC);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		fontOffset = glGenLists(128);
 		for (GLuint i = 32; i < 127; i++)
