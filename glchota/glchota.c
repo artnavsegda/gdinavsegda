@@ -545,8 +545,10 @@ int render(HWND hwnd)
 	snprintf(string, 10, "%9d", (int)sourcex);
 	glCallLists(10, GL_UNSIGNED_BYTE, string);
 	glRasterPos2i(10, 30);
-	snprintf(string, 10, "%9d", m[leveli][(int)sourcex]);
-	glCallLists(10, GL_UNSIGNED_BYTE, string);
+	//165 608 29 882 27 34 273 1545 9984 34 34 8 197
+	snprintf(string, 77, "%5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d", m[1][(int)sourcex], m[2][(int)sourcex], m[3][(int)sourcex], m[4][(int)sourcex], m[5][(int)sourcex], m[6][(int)sourcex], m[7][(int)sourcex], m[8][(int)sourcex], m[9][(int)sourcex], m[10][(int)sourcex], m[11][(int)sourcex], m[12][(int)sourcex], m[13][(int)sourcex]);
+	//snprintf(string, 10, "%9d", m[leveli][(int)sourcex]);
+	glCallLists(77, GL_UNSIGNED_BYTE, string);
 	glPopAttrib();
 
 
