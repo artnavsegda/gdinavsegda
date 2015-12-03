@@ -575,6 +575,8 @@ int animate(HWND hwnd, int count, int xdelta, int ydelta, double zoom)
 	return 0;
 }
 
+int movable = 0;
+
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	char text[100];
@@ -804,6 +806,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		InvalidateRect(hwnd, NULL, TRUE);
 		break;
 	case WM_LBUTTONDOWN:
+		movable = 1;
+		mousex = GET_X_LPARAM(lParam);
+		mousey = GET_Y_LPARAM(lParam);
+		break;
+	case WM_LBUTTONUP:
+		movable = 0;
 		mousex = GET_X_LPARAM(lParam);
 		mousey = GET_Y_LPARAM(lParam);
 		break;
@@ -822,9 +830,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			mousex = GET_X_LPARAM(lParam);
 			deltay = mousey - GET_Y_LPARAM(lParam);
 			mousey = GET_Y_LPARAM(lParam);
-			sourcexprev = sourcexprev + (deltax / xscaleprev);
+			if (movable == 1)
+			{
+				sourcexprev = sourcexprev + (deltax / xscaleprev);
+				yoffset = yoffset + deltay;
+			}
 			//glTranslatef(0.0, deltay / yscale, 0.0);
-			yoffset = yoffset + deltay;
 			InvalidateRect(hwnd, NULL, TRUE);
 			break;
 		case MK_LBUTTON | MK_SHIFT:
