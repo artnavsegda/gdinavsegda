@@ -8,18 +8,14 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19D5E846-FC60-4F9A-9396-0174589F5A69}</ProjectGuid>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.default.props" />
   <PropertyGroup>
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ItemGroup>
-    <Library Include="shlwapi.lib" />
-    <Library Include="opengl32.lib" />
-    <Library Include="glu32.lib" />
-  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glchota.c" />
   </ItemGroup>

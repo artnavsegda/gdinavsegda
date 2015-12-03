@@ -1,6 +1,8 @@
 #include <windows.h>
-#include <gl\gl.h>
-#include <gl\glu.h>
+#include <GL/gl.h>
+#pragma comment(lib, "opengl32.lib")
+#include <GL/glu.h>
+#pragma comment(lib, "glu32.lib")
 
 typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)(int);
 PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT;

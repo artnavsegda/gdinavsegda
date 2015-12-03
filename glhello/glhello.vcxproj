@@ -22,12 +22,6 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ItemGroup>
-    <Library Include="opengl32.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="glu32.lib" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="glhello.c" />
   </ItemGroup>
   <ItemGroup>

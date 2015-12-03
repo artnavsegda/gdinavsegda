@@ -2,6 +2,7 @@
 #include <windowsx.h>
 #include <stdio.h>
 #include <shlwapi.h>
+#pragma comment(lib, "shlwapi.lib")
 #include "winhello.h"
 
 char configfile[] = ".\\winhello.ini";

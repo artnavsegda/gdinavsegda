@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <shlwapi.h>
+#pragma comment(lib, "shlwapi.lib")
 #include <windows.h>
 #include <windowsx.h>
-#include <gl\gl.h>
-#include <gl\glu.h>
+#include <GL/gl.h>
+#pragma comment(lib, "opengl32.lib")
+#include <GL/glu.h>
+#pragma comment(lib, "glu32.lib")
 #include "font.h"
 
 float colors[][3] = { { 255,255,255 },{ 255,255,255 },{ 255,255,255 },{ 255,255,255 },{ 255,255,255 },{ 255,255,255 },{ 255,255,255 },{ 255,255,255 },{ 255,255,255 },{ 255,255,255 },{ 255,255,255 },{ 255,255,255 },{ 255,255,255 },{ 255,255,255 },{ 255,255,255 } };

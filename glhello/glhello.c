@@ -2,7 +2,9 @@
 #include <windows.h>
 #include <windowsx.h>
 #include <GL/gl.h>
+#pragma comment(lib, "opengl32.lib")
 #include <GL/glu.h>
+#pragma comment(lib, "glu32.lib")
 #include "font.h"
 
 #define VSYNC 0

@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <windows.h>
 #include <GL/gl.h>
+#pragma comment(lib, "opengl32.lib")
 #include <GL/glu.h>
+#pragma comment(lib, "glu32.lib")
 #include "font.h"
 
 #define LODWORD(ull) ((DWORD)((ULONGLONG)(ull) & 0x00000000ffffffff))
