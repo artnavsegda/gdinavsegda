@@ -50,11 +50,11 @@ int yoffset = 0;
 POINT first, second;
 DWORD dwarg;
 
-int m[20][9001000];
+short m[14][9001000];
 char mtime[9001000][50];
-int max[20];
-int min[20];
-int col[20];
+int max[14];
+int min[14];
+int col[14];
 int l;
 
 float xspan = 0.0;
@@ -520,6 +520,7 @@ int render(HWND hwnd)
 		double desty = yheight / 2;
 		//float sourcex = l / ((float)xwidth / (float)mousex);
 		double sourcex = sourcetodest(destx);
+
 		//double sourcey = 150;
 		double sourcey = 0;
 
@@ -610,8 +611,64 @@ int animate(HWND hwnd, int count, int xdelta, int ydelta, double zoom)
 
 int movable = 0;
 
+int developcache(char filename[])
+{
+	char message[100];
+	int error;
+	FILE *sora;
+	//	sora = fopen("./chota.txt","r");
+	sora = fopen(filename, "rb");
+	if (sora == NULL)
+	{
+		MessageBox(NULL, "cannot open", "message", MB_OK);
+		exit(0);
+	}
+	else
+		open = 1;
+	developmetrics(filename);
+	//makedefaultmetrics();
+	memset(max, 0, sizeof(max));
+	memset(max, 0, sizeof(min));
+
+	fread(&l, sizeof(int), 1, sora);
+	for (int i = 1; i <= 13; i++)
+	{
+		fread(&m[i], sizeof(short) * l, 1, sora);
+	}
+	fclose(sora);
+
+	if (displaymode)
+		makelists();
+	xscale = (float)xwidth / (float)l;
+
+	return 0;
+}
+
+int integratecache(char filename[])
+{
+	FILE *sora;
+	//	sora = fopen("./chota.txt","r");
+	sora = fopen(filename, "wb");
+	if (sora == NULL)
+	{
+		printf("fucking error");
+		exit(0);
+	}
+
+	fwrite(&l, sizeof(int), 1, sora);
+	for (int i = 1; i <= 13; i++)
+	{
+		fwrite(&m[i], sizeof(short) * l, 1, sora);
+	}
+	fclose(sora);
+
+	return 0;
+}
+
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	static OPENFILENAME ofn;
+	static char szFile[260];
 	char text[100];
 	switch(msg)
 	{
@@ -653,8 +710,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 			sourcexprev = 0;
 			xscaleprev = 1.0;
-			OPENFILENAME ofn;
-			char szFile[260];
 			ZeroMemory(&ofn, sizeof(ofn));
 			ofn.lStructSize = sizeof(ofn);
 			ofn.hwndOwner = hwnd;
@@ -678,6 +733,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				else if (_stricmp(".bin", PathFindExtension(ofn.lpstrFile)) == 0)
 				{
 					developbinary(ofn.lpstrFile);
+					SetWindowText(hwnd, ofn.lpstrFile);
+				}
+				else if (_stricmp(".cache", PathFindExtension(ofn.lpstrFile)) == 0)
+				{
+					developcache(ofn.lpstrFile);
 					SetWindowText(hwnd, ofn.lpstrFile);
 				}
 				else
@@ -712,6 +772,24 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			colors[leveli][1] = GetRValue(rgbCurrent);
 			colors[leveli][2] = GetGValue(rgbCurrent);
 			colors[leveli][3] = GetBValue(rgbCurrent);
+			break;
+		case 5:
+			;
+			ofn.lStructSize = sizeof(ofn);
+			ofn.hwndOwner = hwnd;
+			ofn.lpstrFile = szFile;
+			//ofn.lpstrFile[0] = '\0';
+			ofn.nMaxFile = sizeof(szFile);
+			ofn.lpstrFilter = "Text\0*.TXT\0All\0*.*\0";
+			ofn.nFilterIndex = 1;
+			ofn.lpstrFileTitle = NULL;
+			ofn.nMaxFileTitle = 0;
+			ofn.lpstrInitialDir = NULL;
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+			if (GetSaveFileName(&ofn) == TRUE)
+			{
+				integratecache(ofn.lpstrFile);
+			}
 			break;
 		case 11:
 		case 12:

@@ -5,7 +5,8 @@ Menu MENU
 {
     POPUP "&File"
     {
-        MENUITEM "&Open", 3
+        MENUITEM "&Open", ID_OPEN
+		MENUITEM "&Save", 2
         MENUITEM "&Dialog", 1
         MENUITEM "&Exit", ID_EXIT
     }
