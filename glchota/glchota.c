@@ -672,9 +672,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	char text[100];
 	switch(msg)
 	{
-	case WM_CONTEXTMENU:
-		mousex = GET_X_LPARAM(lParam);
-		mousey = GET_Y_LPARAM(lParam);
+	case WM_RBUTTONDOWN:
+		//mousex = GET_X_LPARAM(lParam);
+		//mousey = GET_Y_LPARAM(lParam);
 		//xscale = xscale * 2.0;
 		if (xscale / 1.1 > (double)xwidth / l)
 		{
@@ -1095,6 +1095,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		glLoadIdentity();
 		gluOrtho2D(0.0, (GLdouble)LOWORD(lParam), 0.0, (GLdouble)HIWORD(lParam));
 		mousex = 0;
+		sourcexprev = 0;
 		xscale = (float)xwidth / (float)l;
 		InvalidateRect(hwnd, NULL, TRUE);
 		break;
