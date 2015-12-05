@@ -952,6 +952,16 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					xscale = (double)xwidth / l;
 				break;
 			}
+		else if (GetKeyState(VK_SHIFT)<0)
+			switch (wParam)
+			{
+			case VK_UP:
+				yscale = yscale * 2;
+				break;
+			case VK_DOWN:
+				yscale = yscale * 0.5;
+				break;
+			}
 		else
 			switch (wParam)
 			{
