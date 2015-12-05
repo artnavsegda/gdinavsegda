@@ -197,7 +197,7 @@ int developmassive(char filename[])
 	//makedefaultmetrics();
 	memset(max,0,sizeof(max));
 	memset(max,0,sizeof(min));
-	while (fscanf(sora,"%d %d %d %d %d %d %d %d %d %d %d %d %d\n", &m[1][l],&m[2][l],&m[3][l],&m[4][l],&m[5][l],&m[6][l],&m[7][l],&m[8][l],&m[9][l],&m[10][l],&m[11][l],&m[12][l],&m[13][l])!=EOF)
+	while (fscanf(sora,"%hd %hd %hd %hd %hd %hd %hd %hd %hd %hd %hd %hd %hd\n", &m[1][l],&m[2][l],&m[3][l],&m[4][l],&m[5][l],&m[6][l],&m[7][l],&m[8][l],&m[9][l],&m[10][l],&m[11][l],&m[12][l],&m[13][l])!=EOF)
 	{
 		for(int i=1;i<=13;i++)
 		{
@@ -287,8 +287,8 @@ int developbinary(char filename[])
 		m[10][l] = (unsigned short)sbuf[8];
 		m[11][l] = (unsigned short)sbuf[9];
 		m[12][l] = (unsigned short)sbuf[10];
-		m[13][l] = buf[0];
-		m[14][l] = buf[1];
+		m[13][l] = (unsigned char)buf[0];
+		m[14][l] = (unsigned char)buf[1];
 
 		fread(buf, 4, 1, sora);
 		//printf("incoming data %hhx %hhx %hhx %hhx\n",   buf[0], buf[1], buf[2], buf[3]);
@@ -565,7 +565,7 @@ int render(HWND hwnd)
 		}
 
 		glPopMatrix();
-		glColor3f(1.0, 1.0, 1.0);
+		glColor3ub(255, 255, 255);
 
 		char string[100];
 
@@ -574,15 +574,38 @@ int render(HWND hwnd)
 		glListBase(fontOffset);
 		snprintf(string, 10, "%9d", (int)sourcex);
 		glCallLists(10, GL_UNSIGNED_BYTE, string);
-		glRasterPos2i(10, 30);
+
+
+		for (int iz = 1; iz <= 13; iz++)
+		{
+			if (iz == leveli)
+			{
+				//glColor3f(1.0, 1.0, 0.0);
+				glColor3ub(255, 255, 0);
+			}
+			else
+			{
+				//glColor3f(1.0, 1.0, 1.0);
+				glColor3ub(colors[iz][1], colors[iz][2], colors[iz][3]);
+			}
+			glRasterPos2i(iz*55, 30);
+			snprintf(string, 6, "%5d", m[iz][(int)sourcex]);
+			glCallLists(5, GL_UNSIGNED_BYTE, string);
+		}
+		glColor3ub(255, 255, 255);
+
+//		glRasterPos2i(10, 30);
 		//165 608 29 882 27 34 273 1545 9984 34 34 8 197
-		snprintf(string, 77, "%5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d", m[1][(int)sourcex], m[2][(int)sourcex], m[3][(int)sourcex], m[4][(int)sourcex], m[5][(int)sourcex], m[6][(int)sourcex], m[7][(int)sourcex], m[8][(int)sourcex], m[9][(int)sourcex], m[10][(int)sourcex], m[11][(int)sourcex], m[12][(int)sourcex], m[13][(int)sourcex]);
+//		snprintf(string, 77, "%5u %5u %5u %5u %5d %5u %5u %5u %5u %5u %5u %5u %5u", m[1][(int)sourcex], m[2][(int)sourcex], m[3][(int)sourcex], m[4][(int)sourcex], m[5][(int)sourcex], m[6][(int)sourcex], m[7][(int)sourcex], m[8][(int)sourcex], m[9][(int)sourcex], m[10][(int)sourcex], m[11][(int)sourcex], m[12][(int)sourcex], m[13][(int)sourcex]);
 		//snprintf(string, 10, "%9d", m[leveli][(int)sourcex]);
-		glCallLists(77, GL_UNSIGNED_BYTE, string);
+//		glCallLists(77, GL_UNSIGNED_BYTE, string);
 		if (binary == 1)
 		{
-			glRasterPos2i(30, 50);
-			glCallLists(50, GL_UNSIGNED_BYTE, mtime[(int)sourcex]);
+			if (sourcex > 0)
+			{
+				glRasterPos2i(30, 50);
+				glCallLists(50, GL_UNSIGNED_BYTE, mtime[(int)sourcex]);
+			}
 		}
 		glPopAttrib();
 	}
@@ -716,7 +739,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			ofn.lpstrFile = szFile;
 			ofn.lpstrFile[0] = '\0';
 			ofn.nMaxFile = sizeof(szFile);
-			ofn.lpstrFilter = "Text\0*.TXT\0Binary\0*.BIN\0All\0*.*\0";
+			ofn.lpstrFilter = "Record\0*.TXT;*.BIN;*.cache\0Text\0*.TXT\0Binary\0*.BIN\0Cache\0*.cache\0All\0*.*\0";
 			ofn.nFilterIndex = 1;
 			ofn.lpstrFileTitle = NULL;
 			ofn.nMaxFileTitle = 0;
