@@ -1,11 +1,15 @@
+#include <stdio.h>
 #include <windows.h>
 #include <GL/gl.h>
-#pragma comment(lib, "opengl32.lib")
 #include <GL/glu.h>
+
+#pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
 
-//typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)(int);
-//PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT;
+#define VSYNC 1
+
+typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)(int);
+PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT;
 
 HDC hDC;
 HGLRC hRC;
@@ -13,10 +17,40 @@ GLuint myList;
 GLfloat xscale = 1.0;
 GLfloat yscale = 1.0;
 
+BOOL WritePrivateProfileInt(LPCTSTR lpAppName, LPCTSTR lpKeyName, int Value, LPCTSTR lpFileName)
+{
+	char Buffer[16];
+	sprintf(Buffer, "%d", Value);
+	return WritePrivateProfileString(lpAppName, lpKeyName, Buffer, lpFileName);
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd,UINT	message,WPARAM	wParam,LPARAM	lParam)
 {
 	switch (message)
 	{
+		case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case 0:
+			DestroyWindow(hWnd);
+			break;
+		case 11:
+		case 12:
+		case 13:
+		case 14:
+		case 15:
+		case 16:
+		case 17:
+		case 18:
+		case 19:
+		case 20:
+			if (GetMenuState(GetMenu(hWnd), LOWORD(wParam), MF_BYCOMMAND) & MF_CHECKED)
+				CheckMenuItem(GetMenu(hWnd), LOWORD(wParam), MF_BYCOMMAND | MF_UNCHECKED);
+			else
+				CheckMenuItem(GetMenu(hWnd), LOWORD(wParam), MF_BYCOMMAND | MF_CHECKED);
+			break;
+		}
+		break;
 	case WM_KEYDOWN:
 		if (GetKeyState(VK_CONTROL)<0)
 		switch (wParam)
@@ -65,8 +99,8 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT	message,WPARAM	wParam,LPARAM	lParam)
 		SetPixelFormat(hDC, ChoosePixelFormat(hDC, &pfd), &pfd);
 		hRC = wglCreateContext(hDC);
 		wglMakeCurrent(hDC, hRC);
-//		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)wglGetProcAddress("wglSwapIntervalEXT");
-//		wglSwapIntervalEXT(1);
+		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)wglGetProcAddress("wglSwapIntervalEXT");
+		wglSwapIntervalEXT(VSYNC);
 		myList = glGenLists(1);
 		glNewList(myList, GL_COMPILE);
 		glBegin(GL_LINE_LOOP);

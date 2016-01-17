@@ -8,6 +8,7 @@ Menu MENU
 		MENUITEM "&Save", 2
         MENUITEM "&Dialog", 1
 		MENUITEM "&Color", 4
+		MENUITEM "&Cache", 5
         MENUITEM "&Exit", 0
     }
     POPUP "&View"

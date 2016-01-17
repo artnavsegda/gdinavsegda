@@ -50,11 +50,11 @@ int yoffset = 0;
 POINT first, second;
 DWORD dwarg;
 
-int m[20][9001000];
+short m[14][9001000];
 char mtime[9001000][50];
-int max[20];
-int min[20];
-int col[20];
+int max[14];
+int min[14];
+int col[14];
 int l;
 
 float xspan = 0.0;
@@ -197,7 +197,7 @@ int developmassive(char filename[])
 	//makedefaultmetrics();
 	memset(max,0,sizeof(max));
 	memset(max,0,sizeof(min));
-	while (fscanf(sora,"%d %d %d %d %d %d %d %d %d %d %d %d %d\n", &m[1][l],&m[2][l],&m[3][l],&m[4][l],&m[5][l],&m[6][l],&m[7][l],&m[8][l],&m[9][l],&m[10][l],&m[11][l],&m[12][l],&m[13][l])!=EOF)
+	while (fscanf(sora,"%hd %hd %hd %hd %hd %hd %hd %hd %hd %hd %hd %hd %hd\n", &m[1][l],&m[2][l],&m[3][l],&m[4][l],&m[5][l],&m[6][l],&m[7][l],&m[8][l],&m[9][l],&m[10][l],&m[11][l],&m[12][l],&m[13][l])!=EOF)
 	{
 		for(int i=1;i<=13;i++)
 		{
@@ -287,8 +287,8 @@ int developbinary(char filename[])
 		m[10][l] = (unsigned short)sbuf[8];
 		m[11][l] = (unsigned short)sbuf[9];
 		m[12][l] = (unsigned short)sbuf[10];
-		m[13][l] = buf[0];
-		m[14][l] = buf[1];
+		m[13][l] = (unsigned char)buf[0];
+		m[14][l] = (unsigned char)buf[1];
 
 		fread(buf, 4, 1, sora);
 		//printf("incoming data %hhx %hhx %hhx %hhx\n",   buf[0], buf[1], buf[2], buf[3]);
@@ -520,6 +520,7 @@ int render(HWND hwnd)
 		double desty = yheight / 2;
 		//float sourcex = l / ((float)xwidth / (float)mousex);
 		double sourcex = sourcetodest(destx);
+
 		//double sourcey = 150;
 		double sourcey = 0;
 
@@ -564,7 +565,7 @@ int render(HWND hwnd)
 		}
 
 		glPopMatrix();
-		glColor3f(1.0, 1.0, 1.0);
+		glColor3ub(255, 255, 255);
 
 		char string[100];
 
@@ -573,15 +574,38 @@ int render(HWND hwnd)
 		glListBase(fontOffset);
 		snprintf(string, 10, "%9d", (int)sourcex);
 		glCallLists(10, GL_UNSIGNED_BYTE, string);
-		glRasterPos2i(10, 30);
+
+
+		for (int iz = 1; iz <= 13; iz++)
+		{
+			if (iz == leveli)
+			{
+				//glColor3f(1.0, 1.0, 0.0);
+				glColor3ub(255, 255, 0);
+			}
+			else
+			{
+				//glColor3f(1.0, 1.0, 1.0);
+				glColor3ub(colors[iz][1], colors[iz][2], colors[iz][3]);
+			}
+			glRasterPos2i(iz*55, 30);
+			snprintf(string, 6, "%5d", m[iz][(int)sourcex]);
+			glCallLists(5, GL_UNSIGNED_BYTE, string);
+		}
+		glColor3ub(255, 255, 255);
+
+//		glRasterPos2i(10, 30);
 		//165 608 29 882 27 34 273 1545 9984 34 34 8 197
-		snprintf(string, 77, "%5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d", m[1][(int)sourcex], m[2][(int)sourcex], m[3][(int)sourcex], m[4][(int)sourcex], m[5][(int)sourcex], m[6][(int)sourcex], m[7][(int)sourcex], m[8][(int)sourcex], m[9][(int)sourcex], m[10][(int)sourcex], m[11][(int)sourcex], m[12][(int)sourcex], m[13][(int)sourcex]);
+//		snprintf(string, 77, "%5u %5u %5u %5u %5d %5u %5u %5u %5u %5u %5u %5u %5u", m[1][(int)sourcex], m[2][(int)sourcex], m[3][(int)sourcex], m[4][(int)sourcex], m[5][(int)sourcex], m[6][(int)sourcex], m[7][(int)sourcex], m[8][(int)sourcex], m[9][(int)sourcex], m[10][(int)sourcex], m[11][(int)sourcex], m[12][(int)sourcex], m[13][(int)sourcex]);
 		//snprintf(string, 10, "%9d", m[leveli][(int)sourcex]);
-		glCallLists(77, GL_UNSIGNED_BYTE, string);
+//		glCallLists(77, GL_UNSIGNED_BYTE, string);
 		if (binary == 1)
 		{
-			glRasterPos2i(30, 50);
-			glCallLists(50, GL_UNSIGNED_BYTE, mtime[(int)sourcex]);
+			if (sourcex > 0)
+			{
+				glRasterPos2i(30, 50);
+				glCallLists(50, GL_UNSIGNED_BYTE, mtime[(int)sourcex]);
+			}
 		}
 		glPopAttrib();
 	}
@@ -610,14 +634,70 @@ int animate(HWND hwnd, int count, int xdelta, int ydelta, double zoom)
 
 int movable = 0;
 
+int developcache(char filename[])
+{
+	char message[100];
+	int error;
+	FILE *sora;
+	//	sora = fopen("./chota.txt","r");
+	sora = fopen(filename, "rb");
+	if (sora == NULL)
+	{
+		MessageBox(NULL, "cannot open", "message", MB_OK);
+		exit(0);
+	}
+	else
+		open = 1;
+	developmetrics(filename);
+	//makedefaultmetrics();
+	memset(max, 0, sizeof(max));
+	memset(max, 0, sizeof(min));
+
+	fread(&l, sizeof(int), 1, sora);
+	for (int i = 1; i <= 13; i++)
+	{
+		fread(&m[i], sizeof(short) * l, 1, sora);
+	}
+	fclose(sora);
+
+	if (displaymode)
+		makelists();
+	xscale = (float)xwidth / (float)l;
+
+	return 0;
+}
+
+int integratecache(char filename[])
+{
+	FILE *sora;
+	//	sora = fopen("./chota.txt","r");
+	sora = fopen(filename, "wb");
+	if (sora == NULL)
+	{
+		printf("fucking error");
+		exit(0);
+	}
+
+	fwrite(&l, sizeof(int), 1, sora);
+	for (int i = 1; i <= 13; i++)
+	{
+		fwrite(&m[i], sizeof(short) * l, 1, sora);
+	}
+	fclose(sora);
+
+	return 0;
+}
+
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	static OPENFILENAME ofn;
+	static char szFile[260];
 	char text[100];
 	switch(msg)
 	{
-	case WM_CONTEXTMENU:
-		mousex = GET_X_LPARAM(lParam);
-		mousey = GET_Y_LPARAM(lParam);
+	case WM_RBUTTONDOWN:
+		//mousex = GET_X_LPARAM(lParam);
+		//mousey = GET_Y_LPARAM(lParam);
 		//xscale = xscale * 2.0;
 		if (xscale / 1.1 > (double)xwidth / l)
 		{
@@ -653,15 +733,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 			sourcexprev = 0;
 			xscaleprev = 1.0;
-			OPENFILENAME ofn;
-			char szFile[260];
 			ZeroMemory(&ofn, sizeof(ofn));
 			ofn.lStructSize = sizeof(ofn);
 			ofn.hwndOwner = hwnd;
 			ofn.lpstrFile = szFile;
 			ofn.lpstrFile[0] = '\0';
 			ofn.nMaxFile = sizeof(szFile);
-			ofn.lpstrFilter = "Text\0*.TXT\0Binary\0*.BIN\0All\0*.*\0";
+			ofn.lpstrFilter = "Record\0*.TXT;*.BIN;*.cache\0Text\0*.TXT\0Binary\0*.BIN\0Cache\0*.cache\0All\0*.*\0";
 			ofn.nFilterIndex = 1;
 			ofn.lpstrFileTitle = NULL;
 			ofn.nMaxFileTitle = 0;
@@ -678,6 +756,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				else if (_stricmp(".bin", PathFindExtension(ofn.lpstrFile)) == 0)
 				{
 					developbinary(ofn.lpstrFile);
+					SetWindowText(hwnd, ofn.lpstrFile);
+				}
+				else if (_stricmp(".cache", PathFindExtension(ofn.lpstrFile)) == 0)
+				{
+					developcache(ofn.lpstrFile);
 					SetWindowText(hwnd, ofn.lpstrFile);
 				}
 				else
@@ -712,6 +795,24 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			colors[leveli][1] = GetRValue(rgbCurrent);
 			colors[leveli][2] = GetGValue(rgbCurrent);
 			colors[leveli][3] = GetBValue(rgbCurrent);
+			break;
+		case 5:
+			;
+			ofn.lStructSize = sizeof(ofn);
+			ofn.hwndOwner = hwnd;
+			ofn.lpstrFile = szFile;
+			//ofn.lpstrFile[0] = '\0';
+			ofn.nMaxFile = sizeof(szFile);
+			ofn.lpstrFilter = "Text\0*.TXT\0All\0*.*\0";
+			ofn.nFilterIndex = 1;
+			ofn.lpstrFileTitle = NULL;
+			ofn.nMaxFileTitle = 0;
+			ofn.lpstrInitialDir = NULL;
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+			if (GetSaveFileName(&ofn) == TRUE)
+			{
+				integratecache(ofn.lpstrFile);
+			}
 			break;
 		case 11:
 		case 12:
@@ -849,6 +950,16 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					xscale = xscale * 0.5;
 				else
 					xscale = (double)xwidth / l;
+				break;
+			}
+		else if (GetKeyState(VK_SHIFT)<0)
+			switch (wParam)
+			{
+			case VK_UP:
+				yscale = yscale * 2;
+				break;
+			case VK_DOWN:
+				yscale = yscale * 0.5;
 				break;
 			}
 		else
@@ -1017,6 +1128,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		glLoadIdentity();
 		gluOrtho2D(0.0, (GLdouble)LOWORD(lParam), 0.0, (GLdouble)HIWORD(lParam));
 		mousex = 0;
+		sourcexprev = 0;
 		xscale = (float)xwidth / (float)l;
 		InvalidateRect(hwnd, NULL, TRUE);
 		break;

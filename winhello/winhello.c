@@ -18,6 +18,8 @@ BOOL WritePrivateProfileInt(LPCTSTR lpAppName, LPCTSTR lpKeyName, int Value, LPC
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	static OPENFILENAME ofn;
+	static char szFile[260] = "hello";
 	switch(msg)
 	{
 		case WM_CONTEXTMENU:
@@ -29,10 +31,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				case ID_EXIT:
 					DestroyWindow(hwnd);
 				break;
-				case 3:
+				case ID_OPEN:
 					;
-					OPENFILENAME ofn;
-					char szFile[260];
 					ZeroMemory(&ofn, sizeof(ofn));
 					ofn.lStructSize = sizeof(ofn);
 					ofn.hwndOwner = hwnd;
@@ -49,6 +49,27 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					{
 						if (_stricmp(".txt", PathFindExtension(ofn.lpstrFile))==0)
 							MessageBox(hwnd,"Text file","message",MB_OK);
+						//developmassive(ofn.lpstrFile);
+					}
+					break;
+				case 2:
+					;
+					ZeroMemory(&ofn, sizeof(ofn));
+					ofn.lStructSize = sizeof(ofn);
+					ofn.hwndOwner = hwnd;
+					ofn.lpstrFile = szFile;
+					//ofn.lpstrFile[0] = '\0';
+					ofn.nMaxFile = sizeof(szFile);
+					ofn.lpstrFilter = "Text\0*.TXT\0All\0*.*\0";
+					ofn.nFilterIndex = 1;
+					ofn.lpstrFileTitle = NULL;
+					ofn.nMaxFileTitle = 0;
+					ofn.lpstrInitialDir = NULL;
+					ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+					if (GetSaveFileName(&ofn) == TRUE)
+					{
+						if (_stricmp(".txt", PathFindExtension(ofn.lpstrFile)) == 0)
+							MessageBox(hwnd, "Text file", "message", MB_OK);
 						//developmassive(ofn.lpstrFile);
 					}
 					break;
