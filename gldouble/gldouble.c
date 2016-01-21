@@ -24,6 +24,8 @@ BOOL WritePrivateProfileInt(LPCTSTR lpAppName, LPCTSTR lpKeyName, int Value, LPC
 	return WritePrivateProfileString(lpAppName, lpKeyName, Buffer, lpFileName);
 }
 
+int xwidth, yheight;
+
 LRESULT CALLBACK WndProc(HWND hWnd,UINT	message,WPARAM	wParam,LPARAM	lParam)
 {
 	switch (message)
@@ -118,6 +120,8 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT	message,WPARAM	wParam,LPARAM	lParam)
 		exit(0);
 		break;
 	case WM_SIZE:
+		xwidth = LOWORD(lParam);
+		yheight = HIWORD(lParam);
 		glViewport(0, 0, LOWORD(lParam), HIWORD(lParam));
 		//gluOrtho2D(-1.0,1.0,-1.0,1.0);
 		break;
@@ -129,6 +133,14 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT	message,WPARAM	wParam,LPARAM	lParam)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
 {
+	int rollpos = 0;
+	int roll[3000];
+	memset(roll, 0, 3000);
+	int incomdata = 0;
+	char incomstring[10];
+	FILE *digitaaal = fopen("COM4", "r");
+	if (digitaaal == NULL)
+		return 1;
 	GLfloat spin = 0.0;
 	MSG Msg;
 	WNDCLASS wc = {0,WndProc,0,0,hInstance,LoadIcon(hInstance, "Window"),LoadCursor(NULL, IDC_ARROW),NULL,"Menu","MainWindowClass"};
@@ -142,12 +154,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 			TranslateMessage(&Msg);
 			DispatchMessage(&Msg);
 		}
+		fscanf(digitaaal, "%d", &incomdata);
+		roll[rollpos] = incomdata;
+		rollpos++;
+		if (rollpos == xwidth)
+			rollpos = 0;
+
 		glClear(GL_COLOR_BUFFER_BIT);
 		glPushMatrix();
 		glScalef(xscale,yscale,1.0);
-		glRotatef(spin++,0.0,0.0,1.0);
+		//glRotatef(spin++,0.0,0.0,1.0);
 		if (spin == 360.0) spin = 0.0;
-		glCallList(myList);
+		//glCallList(myList);
+		glBegin(GL_LINE_STRIP);
+			int i;
+			for (i = 0; rollpos - i > 0; i++)
+				glVertex2f(i, roll[rollpos - i]);
+			for (; i < xwidth; i++)
+				glVertex2f(i, roll[rollpos - i + xwidth]);
+		glEnd();
 		glPopMatrix();
 		glFlush();
 		SwapBuffers(hDC);
