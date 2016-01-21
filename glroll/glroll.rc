@@ -1,0 +1,44 @@
+#include <windows.h>
+
+Menu MENU
+{
+    POPUP "&File"
+    {
+        MENUITEM "&Open", 3
+		MENUITEM "&Save", 2
+        MENUITEM "&Dialog", 1
+		MENUITEM "&Color", 4
+		MENUITEM "&Cache", 5
+        MENUITEM "&Exit", 0
+    }
+    POPUP "&View"
+    {
+	MENUITEM "One\a1", 11
+	MENUITEM "Two\a2", 12
+	MENUITEM "Three\a3", 13
+	MENUITEM "Four\a4", 14
+	MENUITEM "Five\a5", 15
+	MENUITEM "Six\a6", 16
+	MENUITEM "Seven\a7", 17
+	MENUITEM "Eight\a8", 18
+	MENUITEM "Nine\a9", 19
+	MENUITEM "Ten\aA", 20 
+	MENUITEM "Eleven\aB", 21
+	MENUITEM "Twelve\aC", 22
+	MENUITEM "Thirteen\aD", 23
+    }
+}
+
+MainDialog DIALOG  10, 10, 200, 150
+STYLE WS_POPUP | WS_BORDER
+CAPTION "Select range"
+{
+	CTEXT "COM port:", 1, 10, 10, 50, 12
+	EDITTEXT 2, 20, 20, 60, 12
+	CTEXT "Period:", 3, 30, 30, 50, 12
+	EDITTEXT 4, 40, 40, 60, 12
+	CTEXT "Median:", 5, 50, 50, 50, 12
+	EDITTEXT 6, 60, 60, 60, 12
+	PUSHBUTTON "&Exit", 7, 70, 70, 60, 12
+	PUSHBUTTON "&Ignore", 8, 80, 80, 60, 12
+}
