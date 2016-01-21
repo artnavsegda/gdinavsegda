@@ -17,6 +17,8 @@ GLuint myList;
 GLfloat xscale = 1.0;
 GLfloat yscale = 1.0;
 
+char configfile[] = ".\\glroll.ini";
+
 BOOL WritePrivateProfileInt(LPCTSTR lpAppName, LPCTSTR lpKeyName, int Value, LPCTSTR lpFileName)
 {
 	char Buffer[16];
@@ -123,7 +125,11 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT	message,WPARAM	wParam,LPARAM	lParam)
 		xwidth = LOWORD(lParam);
 		yheight = HIWORD(lParam);
 		glViewport(0, 0, LOWORD(lParam), HIWORD(lParam));
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
 		//gluOrtho2D(-1.0,1.0,-1.0,1.0);
+		gluOrtho2D(0.0, (GLdouble)LOWORD(lParam), (GLdouble)HIWORD(lParam) / -2, (GLdouble)HIWORD(lParam) / 2);
+		glMatrixMode(GL_MODELVIEW);
 		break;
 	default:
 		return (DefWindowProc(hWnd, message, wParam, lParam));
@@ -138,14 +144,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 	memset(roll, 0, 3000);
 	int incomdata = 0;
 	char incomstring[10];
-	FILE *digitaaal = fopen("COM4", "r");
+	char filename[260];
+	GetPrivateProfileString("window", "filename", "COM3", filename, 260, configfile);
+	WritePrivateProfileString("window", "filename", filename, configfile);
+	FILE *digitaaal = fopen(filename, "r");
 	if (digitaaal == NULL)
 		return 1;
 	GLfloat spin = 0.0;
 	MSG Msg;
 	WNDCLASS wc = {0,WndProc,0,0,hInstance,LoadIcon(hInstance, "Window"),LoadCursor(NULL, IDC_ARROW),NULL,"Menu","MainWindowClass"};
 	RegisterClass(&wc);
-	HWND hwnd = CreateWindow("MainWindowClass","Window",WS_OVERLAPPEDWINDOW,CW_USEDEFAULT,CW_USEDEFAULT,300,300,NULL,NULL,hInstance,NULL);
+	HWND hwnd = CreateWindow("MainWindowClass","Window",WS_OVERLAPPEDWINDOW,CW_USEDEFAULT,CW_USEDEFAULT,700,700,NULL,NULL,hInstance,NULL);
 	ShowWindow(hwnd,SW_SHOWDEFAULT);
 	while (1)
 	{
@@ -162,9 +171,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		glPushMatrix();
-		glScalef(xscale,yscale,1.0);
+		//glScalef(xscale,yscale,1.0);
 		//glRotatef(spin++,0.0,0.0,1.0);
-		if (spin == 360.0) spin = 0.0;
+		//if (spin == 360.0) spin = 0.0;
 		//glCallList(myList);
 		glBegin(GL_LINE_STRIP);
 			int i;
@@ -178,5 +187,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 		SwapBuffers(hDC);
 		ValidateRect(hwnd,NULL);
 	}
+	fclose(digitaaal);
 	return 0;
 }
