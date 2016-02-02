@@ -26,15 +26,19 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	/* Read 5 registers from the address 10 */
-	rc = modbus_read_registers(mb, 10, 40, tab_reg);
-	if (rc == -1) {
-		fprintf(stderr, "%s\n", modbus_strerror(errno));
-		return -1;
-	}
+	while (1)
+	{
+		/* Read 5 registers from the address 10 */
+		rc = modbus_read_registers(mb, 10, 40, tab_reg);
+		if (rc == -1) {
+			fprintf(stderr, "%s\n", modbus_strerror(errno));
+			return -1;
+		}
 
-	for (i = 0; i < rc; i = i + 2) {
-		printf("reg[%d]=%f (0x%X)\n", i, modbus_get_float(&tab_reg[i]), tab_reg[i]);
+		for (i = 0; i < rc; i = i + 2) {
+			printf("reg[%d]=%f (0x%X)\n", i, modbus_get_float(&tab_reg[i]), tab_reg[i]);
+		}
+		Sleep(1000);
 	}
 
 	modbus_close(mb);
