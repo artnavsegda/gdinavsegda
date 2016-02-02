@@ -251,12 +251,14 @@ int developbinary(char filename[])
 		else
 			break;
 		fread(buf, 6, 1, sora);
-		if (buf[0] >= 0x30)
-			buf[0] -= 0x10;
-		if (buf[1] >= 0x30)
-			buf[1] -= 0x10;
+		if (buf[0] >= 0x30)	buf[0] -= 0x10;
+		if (buf[1] >= 0x30)	buf[1] -= 0x10;
+		if (buf[2] >= 0x30)	buf[2] -= 0x10;
+		if (buf[3] >= 0x30)	buf[3] -= 0x10;
+		if (buf[4] >= 0x30)	buf[4] -= 0x10;
+		if (buf[5] >= 0x30)	buf[5] -= 0x10;
 		{
-			snprintf(mtime[l], 50, "%hhu%hhu:%hhu%hhu:%hhu%hhu ", buf[0] - 0x20, buf[1] - 0x20, buf[2] - 0x30, buf[3] - 0x30, buf[4] - 0x30, buf[5] - 0x30);
+			snprintf(mtime[l], 50, "%hhu%hhu:%hhu%hhu:%hhu%hhu ", buf[0] - 0x20, buf[1] - 0x20, buf[2] - 0x20, buf[3] - 0x20, buf[4] - 0x20, buf[5] - 0x20);
 			//printf("%hhu%hhu:%hhu%hhu:%hhu%hhu ", buf[0] - 0x20, buf[1] - 0x20, buf[2] - 0x30, buf[3] - 0x30, buf[4] - 0x30, buf[5] - 0x30);
 		}
 		fread(buf, 1, 1, sora);

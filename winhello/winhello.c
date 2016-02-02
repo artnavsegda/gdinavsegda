@@ -104,6 +104,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			PostQuitMessage(0);
 		break;
 		case WM_DROPFILES:
+			;
 			TCHAR lpszFile[MAX_PATH] = { 0 };
 			UINT uFile = 0;
 			HDROP hDrop = (HDROP)wParam;

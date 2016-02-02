@@ -27,6 +27,13 @@ Menu MENU
 	MENUITEM "Twelve\aC", 22
 	MENUITEM "Thirteen\aD", 23
     }
+	POPUP "&Options"
+	{
+		MENUITEM "&Open recent", 101
+		MENUITEM "&Command lists", 102
+		MENUITEM "&Write metrics", 103
+		MENUITEM "&Set color", 104
+	}
 }
 
 MainDialog DIALOG  10, 10, 200, 150
