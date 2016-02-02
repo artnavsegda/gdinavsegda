@@ -19,6 +19,9 @@
     <Link>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)libmodbus\src</AdditionalIncludeDirectories>
+    </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ItemGroup>
@@ -30,6 +33,11 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="winhello.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libmodbus\src\win32\modbus.vcxproj">
+      <Project>{498e0845-c7f4-438b-8ede-ef7fc9a74430}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Targets" />
 </Project>
