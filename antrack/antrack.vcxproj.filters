@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="antrack.c">
+    <ClCompile Include="mbget.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
