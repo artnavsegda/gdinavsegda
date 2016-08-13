@@ -194,6 +194,13 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+<<<<<<< HEAD
 *.ini
 glhello/glhello.ini
 *.ini
+=======
+
+*.ini
+*.metrics
+
+>>>>>>> origin/master

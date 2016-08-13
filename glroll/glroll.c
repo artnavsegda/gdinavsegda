@@ -1,10 +1,14 @@
+#define _WINSOCKAPI_
+
 #include <stdio.h>
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <modbus.h>
 
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
+#pragma comment(lib, "modbus.lib")
 
 #define VSYNC 1
 
@@ -139,18 +143,37 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT	message,WPARAM	wParam,LPARAM	lParam)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
 {
+	uint16_t tab_reg[256];
+	int rc;
 	int rollpos = 0;
 	int roll[3000];
-	memset(roll, 0, 3000);
+	int roll2[3000];
+	int roll3[3000];
+	int roll4[3000];
+	int roll5[3000];
+	int roll6[3000];
+	memset(roll, 0, 3000 * sizeof(int));
+	memset(roll2, 0, 3000 * sizeof(int));
+	memset(roll3, 0, 3000 * sizeof(int));
+	memset(roll4, 0, 3000 * sizeof(int));
+	memset(roll5, 0, 3000 * sizeof(int));
+	memset(roll6, 0, 3000 * sizeof(int));
 	int incomdata = 0;
-	char incomstring[10];
+	int incomdata2 = 0;
+	int incomdata3 = 0;
+	int incomdata4 = 0;
+	int incomdata5 = 0;
+	int incomdata6 = 0;
+	/*char incomstring[100];
+	char incomstring2[100];
+	char incomstring3[100];
+	char incomstring4[100];
+	char incomstring5[100];
+	char incomstring6[100];*/
 	char filename[260];
-	GetPrivateProfileString("window", "filename", "COM3", filename, 260, configfile);
-	WritePrivateProfileString("window", "filename", filename, configfile);
-	FILE *digitaaal = fopen(filename, "r");
-	if (digitaaal == NULL)
-		return 1;
-	GLfloat spin = 0.0;
+	GetPrivateProfileString("window", "ipaddress", "192.168.1.120", filename, 260, configfile);
+	WritePrivateProfileString("window", "ipaddress", filename, configfile);
+	modbus_t *mb = modbus_new_tcp(filename, 502);
 	MSG Msg;
 	WNDCLASS wc = {0,WndProc,0,0,hInstance,LoadIcon(hInstance, "Window"),LoadCursor(NULL, IDC_ARROW),NULL,"Menu","MainWindowClass"};
 	RegisterClass(&wc);
@@ -163,8 +186,37 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 			TranslateMessage(&Msg);
 			DispatchMessage(&Msg);
 		}
-		fscanf(digitaaal, "%d", &incomdata);
+		while (modbus_connect(mb) == -1)
+		{
+			fprintf(stderr, "Connection failed: %s\n", modbus_strerror(errno));
+			//modbus_free(mb);
+			//return -1;
+		}
+		rc = modbus_read_registers(mb, 0, 10, tab_reg);
+		if (rc == -1) {
+			fprintf(stderr, "%s\n", modbus_strerror(errno));
+			return -1;
+		}
+		modbus_close(mb);
+		incomdata = tab_reg[0];
+		incomdata2 = tab_reg[1];
+		incomdata3 = tab_reg[2];
+		incomdata4 = tab_reg[3];
+		incomdata5 = tab_reg[4];
+		incomdata6 = tab_reg[5];
+		/*/sprintf(incomstring, "%d", incomdata);
+		sprintf(incomstring2, "%d", incomdata2);
+		sprintf(incomstring3, "%d", incomdata3);
+		sprintf(incomstring4, "%d", incomdata4);
+		sprintf(incomstring5, "%d", incomdata5);
+		sprintf(incomstring6, "%d", incomdata6);
+		printf("%d %d %d %d %d %d\n", incomdata, incomdata2, incomdata3, incomdata4, incomdata5, incomdata6);*/
 		roll[rollpos] = incomdata;
+		roll2[rollpos] = incomdata2;
+		roll3[rollpos] = incomdata3;
+		roll4[rollpos] = incomdata4;
+		roll5[rollpos] = incomdata5;
+		roll6[rollpos] = incomdata6;
 		rollpos++;
 		if (rollpos == xwidth)
 			rollpos = 0;
@@ -175,18 +227,61 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 		//glRotatef(spin++,0.0,0.0,1.0);
 		//if (spin == 360.0) spin = 0.0;
 		//glCallList(myList);
+		/*glRasterPos2f(50.0, 50.0);
+		glCallLists(40, GL_UNSIGNED_BYTE, (GLubyte *)incomstring);
+		glRasterPos2f(50.0, 70.0);
+		glCallLists(40, GL_UNSIGNED_BYTE, (GLubyte *)incomstring2);
+		glRasterPos2f(50.0, 90.0);
+		glCallLists(40, GL_UNSIGNED_BYTE, (GLubyte *)incomstring3);
+		glRasterPos2f(50.0, 110.0);
+		glCallLists(40, GL_UNSIGNED_BYTE, (GLubyte *)incomstring4);
+		glRasterPos2f(50.0, 130.0);
+		glCallLists(40, GL_UNSIGNED_BYTE, (GLubyte *)incomstring5);
+		glRasterPos2f(50.0, 150.0);
+		glCallLists(40, GL_UNSIGNED_BYTE, (GLubyte *)incomstring6);*/
+		int i;
 		glBegin(GL_LINE_STRIP);
-			int i;
-			for (i = 0; rollpos - i > 0; i++)
-				glVertex2f(i, roll[rollpos - i]);
-			for (; i < xwidth; i++)
-				glVertex2f(i, roll[rollpos - i + xwidth]);
+		for (i = 0; rollpos - i>0; i++)
+			glVertex2f(i, roll[rollpos - i]);
+		for (; i<xwidth; i++)
+			glVertex2f(i, roll[rollpos - i + xwidth]);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		for (i = 0; rollpos - i>0; i++)
+			glVertex2f(i, roll2[rollpos - i]);
+		for (; i<xwidth; i++)
+			glVertex2f(i, roll2[rollpos - i + xwidth]);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		for (i = 0; rollpos - i>0; i++)
+			glVertex2f(i, roll3[rollpos - i]);
+		for (; i<xwidth; i++)
+			glVertex2f(i, roll3[rollpos - i + xwidth]);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		for (i = 0; rollpos - i>0; i++)
+			glVertex2f(i, roll4[rollpos - i]);
+		for (; i<xwidth; i++)
+			glVertex2f(i, roll4[rollpos - i + xwidth]);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		for (i = 0; rollpos - i>0; i++)
+			glVertex2f(i, roll5[rollpos - i]);
+		for (; i<xwidth; i++)
+			glVertex2f(i, roll5[rollpos - i + xwidth]);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		for (i = 0; rollpos - i>0; i++)
+			glVertex2f(i, roll6[rollpos - i]);
+		for (; i<xwidth; i++)
+			glVertex2f(i, roll6[rollpos - i + xwidth]);
 		glEnd();
 		glPopMatrix();
 		glFlush();
 		SwapBuffers(hDC);
 		ValidateRect(hwnd,NULL);
+		Sleep(200);
 	}
-	fclose(digitaaal);
+	modbus_free(mb);
 	return 0;
 }

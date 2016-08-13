@@ -1,16 +1,11 @@
-#define _WINSOCKAPI_
-
 #include <windows.h>
 #include <windowsx.h>
 #include <stdio.h>
 #include <shlwapi.h>
-#include <modbus.h>
-#include "winhello.h"
-
 #pragma comment(lib, "shlwapi.lib")
-#pragma comment(lib, "modbus.lib")
+#include "dxhello.h"
 
-char configfile[] = ".\\winhello.ini";
+char configfile[] = ".\\dxhello.ini";
 int width = 300;
 int height = 300;
 
@@ -104,7 +99,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			PostQuitMessage(0);
 		break;
 		case WM_DROPFILES:
-			;
 			TCHAR lpszFile[MAX_PATH] = { 0 };
 			UINT uFile = 0;
 			HDROP hDrop = (HDROP)wParam;

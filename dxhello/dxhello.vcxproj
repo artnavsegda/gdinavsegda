@@ -7,7 +7,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{44AA5F3B-0707-472D-995B-9C7B16E46B75}</ProjectGuid>
+    <ProjectGuid>{CAD8DEE6-6C06-4478-A2EE-E8F563120A11}</ProjectGuid>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.default.props" />
@@ -18,22 +18,17 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)</AdditionalLibraryDirectories>
     </Link>
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)libmodbus\src</AdditionalIncludeDirectories>
-    </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ItemGroup>
-    <ClCompile Include="winhello.c" />
+    <ClCompile Include="dxhello.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="winhello.h" />
+    <ClInclude Include="dxhello.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="winhello.rc" />
+    <ResourceCompile Include="dxhello.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Targets" />
 </Project>
