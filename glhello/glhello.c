@@ -125,6 +125,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT	message,WPARAM wParam,LPARAM lParam)
 			glEndList();
 		}
 		glListBase(fontOffset);
+		SetTimer(hWnd,1,1000, (TIMERPROC)NULL);
 		break;
 	case WM_DESTROY:
 		WritePrivateProfileInt("window", "height", yheight, configfile);
