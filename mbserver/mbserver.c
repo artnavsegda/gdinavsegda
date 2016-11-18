@@ -34,6 +34,7 @@ int main(void)
 		mb_mapping->tab_bits[2] = TRUE;
 		mb_mapping->tab_bits[3] = FALSE;
 		mb_mapping->tab_bits[4] = FALSE;
+		mb_mapping->tab_registers[3] = rand();
 		modbus_set_float_abcd(1.0, &mb_mapping->tab_registers[8]);
 		modbus_set_float_abcd(1.0, &mb_mapping->tab_registers[10]);
 		modbus_set_float_abcd(1.0, &mb_mapping->tab_registers[12]);
