@@ -3,11 +3,14 @@
 
 int main()
 {
+	LPVOID lpMsgBuf;
 	printf("serial\n");
-	HANDLE serial = CreateFile("COM1", GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (serial == INVALID_HANDLE_VALUE);
+	HANDLE serial = CreateFile("COM4", GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (serial == INVALID_HANDLE_VALUE)
 	{
-		printf("cannot open serial\n");
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
+		LocalFree(lpMsgBuf);
+		printf("cannot open serial: %s\n", lpMsgBuf);
 		exit(1);
 	}
 	DCB serialparams = { .BaudRate = CBR_9600,.ByteSize = 8,.StopBits = ONESTOPBIT,.Parity = NOPARITY };
@@ -20,7 +23,7 @@ int main()
 	while (TRUE)
 	{
 		ReadFile(serial, buffer, 1, &numread, NULL);
-		printf("%X ", buffer[1]);
+		printf("%X ", buffer[0]);
 	}
     return 0;
 }
