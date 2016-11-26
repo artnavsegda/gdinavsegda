@@ -1,23 +1,29 @@
 #include <stdio.h>
 #include <windows.h>
 
-int main()
+void oshibka(char *oshibkaname)
 {
 	LPVOID lpMsgBuf;
-	printf("serial\n");
-	HANDLE serial = CreateFile("COM1", GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (serial == INVALID_HANDLE_VALUE)
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
+	printf("%s: %s\n", oshibkaname, lpMsgBuf);
+	LocalFree(lpMsgBuf);
+	exit(1);
+}
+
+int main(int argc, char *argv[])
+{
+	if (argc != 2)
 	{
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
-		printf("cannot open serial: %s\n", lpMsgBuf);
-		LocalFree(lpMsgBuf);
+		printf("name serial port\n");
 		exit(1);
 	}
+	printf("serial\n");
+	HANDLE serial = CreateFile(argv[1], GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (serial == INVALID_HANDLE_VALUE)
+		oshibka("cannot open serial");
 	DCB serialparams = { .BaudRate = CBR_9600,.ByteSize = 8,.StopBits = ONESTOPBIT,.Parity = NOPARITY };
 	if (!SetCommState(serial, &serialparams))
-	{
-		printf("cannot set serial params\n");
-	}
+		oshibka("cannot set serial params");
 	unsigned char buffer[23];
 	int numread;
 	while (TRUE)
