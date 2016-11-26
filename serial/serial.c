@@ -18,12 +18,14 @@ int main()
 	{
 		printf("cannot set serial params\n");
 	}
-	unsigned char buffer[1];
+	unsigned char buffer[23];
 	int numread;
 	while (TRUE)
 	{
-		ReadFile(serial, buffer, 1, &numread, NULL);
-		printf("%X ", buffer[0]);
+		ReadFile(serial, buffer, 23, &numread, NULL);
+		for (int i = 0; i < 23; i++)
+			printf("%X ", buffer[i]);
+		printf("\n");
 	}
     return 0;
 }
