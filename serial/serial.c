@@ -9,8 +9,8 @@ int main()
 	if (serial == INVALID_HANDLE_VALUE)
 	{
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
-		LocalFree(lpMsgBuf);
 		printf("cannot open serial: %s\n", lpMsgBuf);
+		LocalFree(lpMsgBuf);
 		exit(1);
 	}
 	DCB serialparams = { .BaudRate = CBR_9600,.ByteSize = 8,.StopBits = ONESTOPBIT,.Parity = NOPARITY };
