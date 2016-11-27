@@ -24,6 +24,15 @@ int main(int argc, char *argv[])
 	DCB serialparams = { .BaudRate = CBR_9600,.ByteSize = 8,.StopBits = ONESTOPBIT,.Parity = NOPARITY };
 	if (!SetCommState(serial, &serialparams))
 		oshibka("cannot set serial params");
+	COMMTIMEOUTS timeouts = {
+		.ReadIntervalTimeout = 50,
+		.ReadTotalTimeoutConstant = 50,
+		.ReadTotalTimeoutMultiplier = 10,
+		.WriteTotalTimeoutConstant = 50,
+		.WriteTotalTimeoutMultiplier = 10
+	};
+	if (!SetCommState(serial, &serialparams))
+		oshibka("cannot set serial timeouts");
 	unsigned char buffer[23];
 	int numread;
 	while (TRUE)
