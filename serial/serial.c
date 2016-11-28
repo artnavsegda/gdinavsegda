@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 		.WriteTotalTimeoutConstant = 50,
 		.WriteTotalTimeoutMultiplier = 10
 	};
-	if (!SetCommState(serial, &serialparams))
+	if (!SetCommTimeouts(serial, &timeouts))
 		oshibka("cannot set serial timeouts");
 	unsigned char buffer[23];
 	int numread;
