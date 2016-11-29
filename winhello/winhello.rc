@@ -1,9 +1,0 @@
-#include <windows.h>
-#include "menu.h"
-
-MainDialog DIALOG  10, 10, 200, 150
-STYLE WS_POPUP | WS_BORDER
-CAPTION "Dialog" 
-{
-    CTEXT "Text", 1, 10, 10, 50, 12
-}

@@ -6,6 +6,7 @@
 
 #include "menu.h"
 #include "wndproc.h"
+#include "dialog.h"
 
 extern char configfile[];
 extern int width;
@@ -56,6 +57,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					MessageBox(hwnd, "Text file", "message", MB_OK);
 				//developmassive(ofn.lpstrFile);
 			}
+			break;
+		case ID_DIALOG:
+			DialogBox(GetModuleHandle(NULL), "MainDialog", hwnd, (DLGPROC)DialogFunc);
 			break;
 		case 11:
 		case 12:
