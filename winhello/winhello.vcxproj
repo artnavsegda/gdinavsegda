@@ -26,11 +26,15 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ItemGroup>
+    <ClCompile Include="main.c" />
     <ClCompile Include="winhello.c" />
+    <ClCompile Include="wndproc.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="main.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="winhello.h" />
+    <ClInclude Include="wndproc.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="winhello.rc" />
