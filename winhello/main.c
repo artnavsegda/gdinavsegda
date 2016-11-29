@@ -12,7 +12,6 @@ int height = 300;
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
 {
 	MSG Msg;
-	HWND hwnd;
 	WNDCLASS wc = {
 		.style = 0,
 		.lpfnWndProc = WindowProc,
@@ -26,7 +25,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 		.lpszClassName = "MainWindowClass"
 	};
 	RegisterClass(&wc);
-	hwnd = CreateWindow("MainWindowClass", "Window", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, GetPrivateProfileInt("window", "width", CW_USEDEFAULT, configfile), GetPrivateProfileInt("window", "height", CW_USEDEFAULT, configfile), NULL, NULL, hInstance, NULL);
+	HWND hwnd = CreateWindow("MainWindowClass", "Window", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, GetPrivateProfileInt("window", "width", CW_USEDEFAULT, configfile), GetPrivateProfileInt("window", "height", CW_USEDEFAULT, configfile), NULL, NULL, hInstance, NULL);
 	ShowWindow(hwnd, SW_SHOWDEFAULT);
 	while (GetMessage(&Msg, NULL, 0, 0) > 0)
 	{

@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "winhello", "winhello\winhel
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glhello", "glhello\glhello.vcxproj", "{75EC3E1D-074F-4D0E-8876-E5D69D9AABC1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dialog", "dialog\dialog.vcxproj", "{820BD2B5-6057-4C1A-94F6-DCFB9A152BE1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -128,6 +130,14 @@ Global
 		{75EC3E1D-074F-4D0E-8876-E5D69D9AABC1}.Release|x64.ActiveCfg = Release|Win32
 		{75EC3E1D-074F-4D0E-8876-E5D69D9AABC1}.Release|x86.ActiveCfg = Release|Win32
 		{75EC3E1D-074F-4D0E-8876-E5D69D9AABC1}.Release|x86.Build.0 = Release|Win32
+		{820BD2B5-6057-4C1A-94F6-DCFB9A152BE1}.Debug|x64.ActiveCfg = Debug|x64
+		{820BD2B5-6057-4C1A-94F6-DCFB9A152BE1}.Debug|x64.Build.0 = Debug|x64
+		{820BD2B5-6057-4C1A-94F6-DCFB9A152BE1}.Debug|x86.ActiveCfg = Debug|Win32
+		{820BD2B5-6057-4C1A-94F6-DCFB9A152BE1}.Debug|x86.Build.0 = Debug|Win32
+		{820BD2B5-6057-4C1A-94F6-DCFB9A152BE1}.Release|x64.ActiveCfg = Release|x64
+		{820BD2B5-6057-4C1A-94F6-DCFB9A152BE1}.Release|x64.Build.0 = Release|x64
+		{820BD2B5-6057-4C1A-94F6-DCFB9A152BE1}.Release|x86.ActiveCfg = Release|Win32
+		{820BD2B5-6057-4C1A-94F6-DCFB9A152BE1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
