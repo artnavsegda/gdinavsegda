@@ -2,7 +2,7 @@
 #include <windowsx.h>
 #include <shlwapi.h>
 
-#include "winhello.h"
+#include "menu.h"
 #include "wndproc.h"
 
 extern char configfile[];
