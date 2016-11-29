@@ -1,3 +1,5 @@
+#define _WINSOCKAPI_
+
 #include <windows.h>
 #include <windowsx.h>
 #include <shlwapi.h>
@@ -9,20 +11,23 @@ extern char configfile[];
 extern int width;
 extern int height;
 
+char szFile[260] = "hello";
+
+OPENFILENAME ofn = {
+	.lStructSize = sizeof(ofn),
+	.lpstrFile = szFile,
+	.nMaxFile = sizeof(szFile),
+	.lpstrFilter = "Text\0*.TXT\0All\0*.*\0",
+	.nFilterIndex = 1,
+	.lpstrFileTitle = NULL,
+	.nMaxFileTitle = 0,
+	.lpstrInitialDir = NULL,
+	.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR
+};
+
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	static char szFile[260] = "hello";
-	static OPENFILENAME ofn = {
-		.lStructSize = sizeof(ofn),
-		.lpstrFile = szFile,
-		.nMaxFile = sizeof(szFile),
-		.lpstrFilter = "Text\0*.TXT\0All\0*.*\0",
-		.nFilterIndex = 1,
-		.lpstrFileTitle = NULL,
-		.nMaxFileTitle = 0,
-		.lpstrInitialDir = NULL,
-		.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR
-	};
+	ofn.hwndOwner = hwnd;
 	switch (msg)
 	{
 	case WM_CONTEXTMENU:
@@ -36,18 +41,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			break;
 		case ID_OPEN:
 			;
-			ZeroMemory(&ofn, sizeof(ofn));
-			ofn.lStructSize = sizeof(ofn);
-			ofn.hwndOwner = hwnd;
-			ofn.lpstrFile = szFile;
-			ofn.lpstrFile[0] = '\0';
-			ofn.nMaxFile = sizeof(szFile);
-			ofn.lpstrFilter = "Text\0*.TXT\0All\0*.*\0";
-			ofn.nFilterIndex = 1;
-			ofn.lpstrFileTitle = NULL;
-			ofn.nMaxFileTitle = 0;
-			ofn.lpstrInitialDir = NULL;
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 			if (GetOpenFileName(&ofn) == TRUE)
 			{
 				if (_stricmp(".txt", PathFindExtension(ofn.lpstrFile)) == 0)
@@ -57,18 +50,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			break;
 		case ID_SAVE:
 			;
-			ZeroMemory(&ofn, sizeof(ofn));
-			ofn.lStructSize = sizeof(ofn);
-			ofn.hwndOwner = hwnd;
-			ofn.lpstrFile = szFile;
-			//ofn.lpstrFile[0] = '\0';
-			ofn.nMaxFile = sizeof(szFile);
-			ofn.lpstrFilter = "Text\0*.TXT\0All\0*.*\0";
-			ofn.nFilterIndex = 1;
-			ofn.lpstrFileTitle = NULL;
-			ofn.nMaxFileTitle = 0;
-			ofn.lpstrInitialDir = NULL;
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 			if (GetSaveFileName(&ofn) == TRUE)
 			{
 				if (_stricmp(".txt", PathFindExtension(ofn.lpstrFile)) == 0)
