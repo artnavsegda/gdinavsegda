@@ -7,7 +7,19 @@ BOOL CALLBACK DialogProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lPara
 	{
 	case WM_INITDIALOG:
 		SetDlgItemText(hwndDlg, ID_DIALOG_TEXT ,"Hello");
-		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "String");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "Start level");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "Cell delay");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "Cell level");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "Zero delay");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "Zero test");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "Purge");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "Total mercury delay");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "Total mercury");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "Elemental mercury delay");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "Elemental mercury");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "Pre-calibration delay");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "Calibration");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "Post-calibration delay");
 		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_SETCURSEL, 0, 0);
 		break;
 	case WM_COMMAND:
