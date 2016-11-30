@@ -7,6 +7,8 @@ BOOL CALLBACK DialogProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lPara
 	{
 	case WM_INITDIALOG:
 		SetDlgItemText(hwndDlg, ID_DIALOG_TEXT ,"Hello");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_ADDSTRING, 0, "String");
+		SendDlgItemMessage(hwndDlg, ID_DIALOG_COMBO, CB_SETCURSEL, 0, 0);
 		break;
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
