@@ -1,17 +1,19 @@
 #include <windows.h>
+#include "dialog.h"
 
 BOOL CALLBACK DialogProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
 	case WM_INITDIALOG:
+		SetDlgItemText(hwndDlg, ID_DIALOG_TEXT ,"Hello");
 		break;
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
-		case 1:
+		case ID_DIALOG_TEXT:
 			break;
-		case 0:
+		case ID_DIALOG_EXIT:
 			DestroyWindow(hwndDlg);
 			return TRUE;
 			break;

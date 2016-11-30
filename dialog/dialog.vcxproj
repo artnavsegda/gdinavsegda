@@ -143,6 +143,9 @@
   <ItemGroup>
     <ResourceCompile Include="dialog.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dialog.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
