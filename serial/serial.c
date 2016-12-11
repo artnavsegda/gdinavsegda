@@ -33,14 +33,12 @@ int main(int argc, char *argv[])
 	};
 	if (!SetCommTimeouts(serial, &timeouts))
 		oshibka("cannot set serial timeouts");
-	unsigned char buffer[23];
+	unsigned char buffer[1];
 	int numread;
 	while (TRUE)
 	{
-		ReadFile(serial, buffer, 23, &numread, NULL);
-		for (int i = 0; i < 23; i++)
-			printf("%X ", buffer[i]);
-		printf("\n");
+		ReadFile(serial, buffer, 1, &numread, NULL);
+		printf("%d: %X \n", GetTickCount() ,buffer[0]);
 	}
     return 0;
 }
