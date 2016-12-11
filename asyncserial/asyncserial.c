@@ -38,10 +38,17 @@ int main(int argc, char *argv[])
 	int numread;
 	while (TRUE)
 	{
-		ReadFile(serial, buffer, 23, &numread, &osReader);
-		for (int i = 0; i < 23; i++)
-			printf("%X ", buffer[i]);
-		printf("\n");
+		if (ReadFile(serial, buffer, 23, &numread, &osReader) == ERROR_IO_PENDING)
+		{
+			WaitForSingleObject(osReader.hEvent, INFINITE);
+			GetOverlappedResult(serial, &osReader, &numread, TRUE);
+		}
+		else
+		{
+			for (int i = 0; i < 23; i++)
+				printf("%X ", buffer[i]);
+			printf("\n");
+		}
 	}
 	return 0;
 }
