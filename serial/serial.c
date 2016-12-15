@@ -10,6 +10,14 @@ void oshibka(char *oshibkaname)
 	exit(1);
 }
 
+unsigned char genchecksum(unsigned char *massive, int sizeofmassive)
+{
+	unsigned char checksum = 0;
+	for (int i = 0; i<sizeofmassive; i++)
+		checksum = checksum + massive[i];
+	return checksum;
+}
+
 int main(int argc, char *argv[])
 {
 	if (argc != 2)
@@ -37,12 +45,37 @@ int main(int argc, char *argv[])
 	int numread;
 	WriteFile(serial, "\xAF", 1, &numread, NULL);
 
-	unsigned char buffer[1];
-	while (TRUE)
+	unsigned char marker[1];
+
+	do {
+		ReadFile(serial, marker, 1, &numread, NULL);
+	} while (numread != 1);
+
+	printf("1 read %d\n", numread);
+
+	unsigned char buffer[16];
+
+	ReadFile(serial, buffer, 16, &numread, NULL);
+
+	printf("2 read %d\n", numread);
+
+	printf("calculated checksum %X\n", genchecksum(buffer, 16));
+
+	unsigned char checksum[1];
+
+	do {
+		ReadFile(serial, checksum, 1, &numread, NULL);
+	} while (numread != 1);
+
+	printf("3 read %d\n", numread);
+
+	printf("recieved checksum %X\n", checksum[0]);
+
+	/*while (TRUE)
 	{
 		ReadFile(serial, buffer, 1, &numread, NULL);
 		if (numread == 1)
 			printf("%d: %X \n", GetTickCount() ,buffer[0]);
-	}
+	}*/
     return 0;
 }
