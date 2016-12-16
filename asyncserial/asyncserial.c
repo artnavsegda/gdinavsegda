@@ -21,7 +21,11 @@ int main(int argc, char *argv[])
 	HANDLE serial = CreateFile(argv[1], GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, 0);
 	if (serial == INVALID_HANDLE_VALUE)
 		oshibka("cannot open serial");
-	OVERLAPPED osReader = { .hEvent = CreateEvent(NULL, TRUE, FALSE, NULL) };
+	HANDLE ghEvents[2];
+	ghEvents[0] = CreateEvent(NULL, TRUE, FALSE, NULL);
+	ghEvents[1] = CreateEvent(NULL, TRUE, FALSE, NULL);
+	OVERLAPPED osReader = { .hEvent = ghEvents[0] };
+	OVERLAPPED osWriter = { .hEvent = ghEvents[1] };
 	DCB serialparams = { .BaudRate = CBR_9600,.ByteSize = 8,.StopBits = ONESTOPBIT,.Parity = NOPARITY };
 	if (!SetCommState(serial, &serialparams))
 		oshibka("cannot set serial params");
@@ -34,21 +38,43 @@ int main(int argc, char *argv[])
 	};
 	if (!SetCommTimeouts(serial, &timeouts))
 		oshibka("cannot set serial timeouts");
-	unsigned char buffer[23];
+
+	unsigned char buffer[1];
 	int numread;
+
+	while (ReadFile(serial, buffer, 1, &numread, &osReader) == TRUE)
+		if (numread == 1)
+			printf("%X\n", buffer[0]);
+	if (GetLastError() != ERROR_IO_PENDING)
+		oshibka("read serial");
+
+	while (WriteFile(serial, "\xAF", 1, &numread, &osWriter) == TRUE);
+	if (GetLastError() != ERROR_IO_PENDING)
+		oshibka("write serial");
+
 	while (TRUE)
 	{
-		if (ReadFile(serial, buffer, 23, &numread, &osReader) == ERROR_IO_PENDING)
+		switch (WaitForMultipleObjects(2, ghEvents, FALSE, INFINITE))
 		{
-			WaitForSingleObject(osReader.hEvent, INFINITE);
+		case WAIT_OBJECT_0:
 			GetOverlappedResult(serial, &osReader, &numread, TRUE);
-		}
-		else
-		{
-			for (int i = 0; i < 23; i++)
-				printf("%X ", buffer[i]);
-			printf("\n");
+			do {
+				if (numread == 1)
+					printf("%X\n", buffer[0]);
+			} while (ReadFile(serial, buffer, 1, &numread, &osReader) == TRUE);
+			if (GetLastError() != ERROR_IO_PENDING)
+				oshibka("read serial");
+			break;
+		case WAIT_OBJECT_0+1:
+			GetOverlappedResult(serial, &osWriter, &numread, TRUE);
+			while (WriteFile(serial, "\xAA", 1, &numread, &osWriter) == TRUE);
+			if (GetLastError() != ERROR_IO_PENDING)
+				oshibka("write serial");
+			break;
+		default:
+			break;
 		}
 	}
+
 	return 0;
 }
