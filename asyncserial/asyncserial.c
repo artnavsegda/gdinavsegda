@@ -21,11 +21,6 @@ int main(int argc, char *argv[])
 	HANDLE serial = CreateFile(argv[1], GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, 0);
 	if (serial == INVALID_HANDLE_VALUE)
 		oshibka("cannot open serial");
-	HANDLE ghEvents[2];
-	ghEvents[0] = CreateEvent(NULL, TRUE, FALSE, NULL);
-	ghEvents[1] = CreateEvent(NULL, TRUE, FALSE, NULL);
-	OVERLAPPED osReader = { .hEvent = ghEvents[0] };
-	OVERLAPPED osWriter = { .hEvent = ghEvents[1] };
 	DCB serialparams = { .BaudRate = CBR_9600,.ByteSize = 8,.StopBits = ONESTOPBIT,.Parity = NOPARITY };
 	if (!SetCommState(serial, &serialparams))
 		oshibka("cannot set serial params");
@@ -41,6 +36,13 @@ int main(int argc, char *argv[])
 
 	unsigned char buffer[1];
 	int numread;
+
+	HANDLE ghEvents[2];
+	ghEvents[0] = CreateEvent(NULL, TRUE, FALSE, NULL);
+	ghEvents[1] = CreateEvent(NULL, TRUE, FALSE, NULL);
+	OVERLAPPED osReader = { .hEvent = ghEvents[0] };
+	OVERLAPPED osWriter = { .hEvent = ghEvents[1] };
+
 
 	while (ReadFile(serial, buffer, 1, &numread, &osReader) == TRUE)
 		if (numread == 1)
