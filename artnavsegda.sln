@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.25928.0
+VisualStudioVersion = 15.0.26014.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glchota", "glchota\glchota.vcxproj", "{19D5E846-FC60-4F9A-9396-0174589F5A69}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dialog", "dialog\dialog.vcxproj", "{820BD2B5-6057-4C1A-94F6-DCFB9A152BE1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "asyncserial", "asyncserial\asyncserial.vcxproj", "{ADF16D22-E4C4-4573-9178-1C6361074F61}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbtable", "mbtable\mbtable.vcxproj", "{44FAFB26-41AC-421C-89CB-86B95551D825}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +62,8 @@ Global
 		{820BD2B5-6057-4C1A-94F6-DCFB9A152BE1}.Release|x86.Build.0 = Release|Win32
 		{ADF16D22-E4C4-4573-9178-1C6361074F61}.Release|x86.ActiveCfg = Release|Win32
 		{ADF16D22-E4C4-4573-9178-1C6361074F61}.Release|x86.Build.0 = Release|Win32
+		{44FAFB26-41AC-421C-89CB-86B95551D825}.Release|x86.ActiveCfg = Release|Win32
+		{44FAFB26-41AC-421C-89CB-86B95551D825}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
