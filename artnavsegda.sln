@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "asyncserial", "asyncserial\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbtable", "mbtable\mbtable.vcxproj", "{44FAFB26-41AC-421C-89CB-86B95551D825}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "serialrecord", "serialrecord\serialrecord.vcxproj", "{5303AF59-5520-4E48-BDA4-7D69332B2550}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Release|x86 = Release|x86
@@ -64,6 +66,8 @@ Global
 		{ADF16D22-E4C4-4573-9178-1C6361074F61}.Release|x86.Build.0 = Release|Win32
 		{44FAFB26-41AC-421C-89CB-86B95551D825}.Release|x86.ActiveCfg = Release|Win32
 		{44FAFB26-41AC-421C-89CB-86B95551D825}.Release|x86.Build.0 = Release|Win32
+		{5303AF59-5520-4E48-BDA4-7D69332B2550}.Release|x86.ActiveCfg = Release|Win32
+		{5303AF59-5520-4E48-BDA4-7D69332B2550}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
