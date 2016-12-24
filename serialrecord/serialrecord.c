@@ -50,7 +50,26 @@ int main(int argc, char *argv[])
 	if (outputfile == INVALID_HANDLE_VALUE)
 		oshibka("cannot create record file");
 
-	DCB serialparams = { .BaudRate = CBR_115200,.ByteSize = 8,.StopBits = ONESTOPBIT,.Parity = NOPARITY };
+	DCB serialparams = {
+		.DCBlength = sizeof(DCB),
+		.BaudRate = CBR_115200,
+		.fBinary = TRUE,
+		.fParity = FALSE,
+		.fOutxCtsFlow = FALSE,
+		.fOutxDsrFlow = FALSE,
+		.fDtrControl = DTR_CONTROL_DISABLE,
+		.fDsrSensitivity = FALSE,
+		.fTXContinueOnXoff = TRUE,
+		.fOutX = FALSE,
+		.fInX = FALSE,
+		.fErrorChar = FALSE,
+		.fNull = FALSE,
+		.fRtsControl = RTS_CONTROL_DISABLE,
+		.fAbortOnError = FALSE,
+		.ByteSize = 8,
+		.Parity = NOPARITY,
+		.StopBits = ONESTOPBIT
+	};
 	if (!SetCommState(serial, &serialparams))
 		oshibka("cannot set serial params");
 
@@ -80,11 +99,13 @@ int main(int argc, char *argv[])
 			WriteFile(outputfile, buffer, 1, &numread, NULL);
 			putchar(buffer[0]);
 		}
-		ReadConsoleInput(hStdin, irInBuf, 1, &numread);
+		PeekConsoleInput(hStdin, irInBuf, 1, &numread);
 		if (numread == 1)
 		{
 			if (irInBuf[0].EventType == KEY_EVENT && irInBuf[0].Event.KeyEvent.uChar.AsciiChar == 'q')
 				break;
+			else
+				FlushConsoleInputBuffer(hStdin);
 		}
 	}
 
