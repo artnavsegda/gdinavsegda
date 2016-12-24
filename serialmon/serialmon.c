@@ -1,6 +1,7 @@
 #include <curses.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
 
 struct dataunit {
 	unsigned char rxnum;
@@ -75,6 +76,7 @@ int main(int argc, char *argv[])
 		switch (getch())
 		{
 		case 'q':
+			FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 			exit(0);
 			break;
 		case KEY_RIGHT:
