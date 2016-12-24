@@ -11,6 +11,21 @@ struct dataunit {
 
 struct dataunit datamassive[10000];
 
+void moroka(void)
+{
+	int numread;
+	INPUT_RECORD irInBuf[1];
+	HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+	if (hStdin == INVALID_HANDLE_VALUE)
+	{
+		printf("GetStdHandle");
+		exit(0);
+	}
+	PeekConsoleInput(hStdin, irInBuf, 1, &numread);
+	if (numread == 1)
+		FlushConsoleInputBuffer(hStdin);
+}
+
 int main(int argc, char *argv[])
 {
 	if (argc != 2)
@@ -76,7 +91,7 @@ int main(int argc, char *argv[])
 		switch (getch())
 		{
 		case 'q':
-			FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+			moroka();
 			exit(0);
 			break;
 		case KEY_RIGHT:

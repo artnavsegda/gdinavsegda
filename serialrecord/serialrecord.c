@@ -86,7 +86,6 @@ int main(int argc, char *argv[])
 	HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
 	if (hStdin == INVALID_HANDLE_VALUE)
 		oshibka("GetStdHandle");
-	FlushConsoleInputBuffer(hStdin);
 
 	unsigned char buffer[1];
 	int numread;
@@ -95,6 +94,7 @@ int main(int argc, char *argv[])
 	WriteFile(serial, "x", 1, &numread, NULL);
 	Sleep(1000);
 
+	FlushConsoleInputBuffer(hStdin);
 	PurgeComm(serial, PURGE_RXCLEAR);
 
 	while (TRUE)
