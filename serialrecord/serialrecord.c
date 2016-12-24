@@ -91,6 +91,8 @@ int main(int argc, char *argv[])
 	int numread;
 	INPUT_RECORD irInBuf[1];
 
+	Sleep(1000);
+
 	PurgeComm(serial, PURGE_RXCLEAR);
 
 	while (TRUE)
