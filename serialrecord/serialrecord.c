@@ -27,9 +27,9 @@ void oshibka(char *oshibkaname)
 
 int main(int argc, char *argv[])
 {
-	if (argc != 2)
+	if (argc < 2)
 	{
-		printf("name serial port\n");
+		printf("name serial port and maybe save file\n");
 		exit(1);
 	}
 
@@ -37,9 +37,16 @@ int main(int argc, char *argv[])
 	if (serial == INVALID_HANDLE_VALUE)
 		oshibka("cannot open serial");
 
-	if (GetSaveFileName(&ofn) != TRUE)
-		exit(1);
-	HANDLE outputfile = CreateFile(ofn.lpstrFile, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	char *recordfilename;
+	if (argc >= 3)
+		recordfilename = argv[2];
+	else
+		if (GetSaveFileName(&ofn) != TRUE)
+			exit(1);
+		else
+			recordfilename = ofn.lpstrFile;
+
+	HANDLE outputfile = CreateFile(recordfilename, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	if (outputfile == INVALID_HANDLE_VALUE)
 		oshibka("cannot create record file");
 
@@ -57,8 +64,13 @@ int main(int argc, char *argv[])
 	if (!SetCommTimeouts(serial, &timeouts))
 		oshibka("cannot set serial timeouts");
 
+	HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+	if (hStdin == INVALID_HANDLE_VALUE)
+		oshibka("GetStdHandle");
+
 	unsigned char buffer[1];
 	int numread;
+	INPUT_RECORD irInBuf[1];
 
 	while (TRUE)
 	{
@@ -67,6 +79,12 @@ int main(int argc, char *argv[])
 		{
 			WriteFile(outputfile, buffer, 1, &numread, NULL);
 			putchar(buffer[0]);
+		}
+		ReadConsoleInput(hStdin, irInBuf, 1, &numread);
+		if (numread == 1)
+		{
+			if (irInBuf[0].EventType == KEY_EVENT && irInBuf[0].Event.KeyEvent.uChar.AsciiChar == 'q')
+				break;
 		}
 	}
 
