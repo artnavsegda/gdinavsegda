@@ -98,7 +98,8 @@ int main(int argc, char *argv[])
 	PurgeComm(serial, PURGE_RXCLEAR);
 
 	while (buffer[0] != '\n')
-		ReadFile(serial, buffer, 1, &numread, NULL);
+		while (numread != 1)
+			ReadFile(serial, buffer, 1, &numread, NULL);
 
 
 	while (TRUE)
