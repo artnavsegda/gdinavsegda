@@ -91,6 +91,8 @@ int main(int argc, char *argv[])
 	int numread;
 	INPUT_RECORD irInBuf[1];
 
+	PurgeComm(serial, PURGE_RXCLEAR);
+
 	while (TRUE)
 	{
 		ReadFile(serial, buffer, 1, &numread, NULL);
