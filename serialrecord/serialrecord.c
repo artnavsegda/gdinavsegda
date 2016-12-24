@@ -97,6 +97,10 @@ int main(int argc, char *argv[])
 	FlushConsoleInputBuffer(hStdin);
 	PurgeComm(serial, PURGE_RXCLEAR);
 
+	while (buffer[0] != '\n')
+		ReadFile(serial, buffer, 1, &numread, NULL);
+
+
 	while (TRUE)
 	{
 		ReadFile(serial, buffer, 1, &numread, NULL);
