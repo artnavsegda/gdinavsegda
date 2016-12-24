@@ -91,6 +91,7 @@ int main(int argc, char *argv[])
 	int numread;
 	INPUT_RECORD irInBuf[1];
 
+	WriteFile(serial, "x", 1, &numread, NULL);
 	Sleep(1000);
 
 	PurgeComm(serial, PURGE_RXCLEAR);
