@@ -104,10 +104,9 @@ int main(int argc, char *argv[])
 		PeekConsoleInput(hStdin, irInBuf, 1, &numread);
 		if (numread == 1)
 		{
+			FlushConsoleInputBuffer(hStdin);
 			if (irInBuf[0].EventType == KEY_EVENT && irInBuf[0].Event.KeyEvent.uChar.AsciiChar == 'q')
 				break;
-			else
-				FlushConsoleInputBuffer(hStdin);
 		}
 	}
 
