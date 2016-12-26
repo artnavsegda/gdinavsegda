@@ -71,6 +71,24 @@ int readframe(HANDLE serial, int framelength, void *frame)
 	return 1;
 }
 
+int detecttransfersize(HANDLE serial)
+{
+	int counter = 0;
+	int numread;
+	unsigned char frame[22];
+	while (TRUE)
+	{
+		ReadFile(serial, frame, 1, &numread, NULL);
+		if (numread == 1)
+		{
+			if (frame[0] != 0xA5)
+				counter++;
+			else
+				return counter;
+		}
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	if (argc != 2)
@@ -99,7 +117,10 @@ int main(int argc, char *argv[])
 	unsigned char frame[22];
 	int counter = 0;
 
-	while (TRUE)
+	while (detecttransfersize(serial) != 22)
+		transfermode(serial);
+
+	/*while (TRUE)
 	{
 		ReadFile(serial, frame, 1, &numread, NULL);
 		if (numread == 1)
@@ -118,13 +139,15 @@ int main(int argc, char *argv[])
 				counter = 0;
 			}
 		}
-	}
+	}*/
 
-	ReadFile(serial, frame, 22, &numread, NULL);
-	printf("read %d\n", numread);
+	/*ReadFile(serial, frame, 22, &numread, NULL);
+	printf("read %d\n", numread);*/
 	int a5counter = 0;
 	int afcounter = 0;
 	struct a5framestruct a5frame;
+
+	readframe(serial, 21, &a5frame);
 
 	while (TRUE)
 	{
@@ -150,6 +173,9 @@ int main(int argc, char *argv[])
 				}
 				break;
 			default:
+				while (detecttransfersize(serial) != 22)
+					transfermode(serial);
+				readframe(serial, 21, &a5frame);
 				break;
 			}
 		}
