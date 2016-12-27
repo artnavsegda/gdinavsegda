@@ -180,7 +180,12 @@ int main(int argc, char *argv[])
 	if (!SetCommTimeouts(serial, &timeouts))
 		oshibka("cannot set serial timeouts");
 
-	int numread;
+	HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+	if (hStdin == INVALID_HANDLE_VALUE)
+		oshibka("GetStdHandle");
+
+	INPUT_RECORD irInBuf[1];
+	int numread, numwrite;
 	unsigned char frame[22];
 	int counter = 0;
 
@@ -279,7 +284,7 @@ int main(int argc, char *argv[])
 			case 0xA0:
 				if (!readframe(serial, 4, &a0frame))
 				{
-					mvprintw(3, 0, "%6ld 0xA0 %s\n", a0counter++,
+					mvprintw(3, 0, "%6ld 0xA0 %4s\n", a0counter++,
 						a0frame.devicenumber);
 				}
 				break;
@@ -378,6 +383,52 @@ int main(int argc, char *argv[])
 				break;*/
 			default:
 				break;
+			}
+		}
+		PeekConsoleInput(hStdin, irInBuf, 1, &numread);
+		if (numread == 1)
+		{
+			FlushConsoleInputBuffer(hStdin);
+			if (irInBuf[0].EventType == KEY_EVENT)
+			{
+				switch (irInBuf[0].Event.KeyEvent.uChar.AsciiChar)
+				{
+				case 'q':
+					exit(0);
+					break;
+				case '1':
+					WriteFile(serial, "\xAF", 1, &numwrite, NULL);
+					break;
+				case '2':
+					WriteFile(serial, "\xAE", 1, &numwrite, NULL);
+					break;
+				case '3':
+					WriteFile(serial, "\xA0", 1, &numwrite, NULL);
+					break;
+				case '4':
+					WriteFile(serial, "\xA1", 1, &numwrite, NULL);
+					break;
+				case '5':
+					WriteFile(serial, "\xAD", 1, &numwrite, NULL);
+					break;
+				case '6':
+					WriteFile(serial, "\xAA", 1, &numwrite, NULL);
+					break;
+				case '7':
+					WriteFile(serial, "\xA2", 1, &numwrite, NULL);
+					break;
+				case '8':
+					WriteFile(serial, "\xA7", 1, &numwrite, NULL);
+					break;
+				case '9':
+					WriteFile(serial, "\xA4", 1, &numwrite, NULL);
+					break;
+				case '0':
+					WriteFile(serial, "\xA6", 1, &numwrite, NULL);
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}
