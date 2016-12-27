@@ -17,6 +17,78 @@ struct a5framestruct {
 	char voltagepmt;
 };
 
+struct afframestruct {
+	unsigned char coefficentamp3;
+	unsigned char coefficentamp2;
+	unsigned char coefficentamp1;
+	short dark_current;
+	short biasamp3;
+	short biasamp2;
+	short biasamp1;
+	short switch_threshhold;
+	short coefficentcalib;
+	unsigned char zerobias;
+};
+
+struct aeframestruct {
+	unsigned char timeaverage;
+	unsigned char timezero;
+	unsigned char timecumulation;
+	unsigned char timeintegration;
+	short lowerthreshold;
+	short upperthreshold;
+};
+
+struct a0framestruct {
+	char devicenumber[4];
+};
+
+struct a1framestruct {
+	char calibrationdate[24];
+};
+
+struct adframestruct {
+	short operatinglamp1;
+	short operatinglamp2;
+};
+
+struct aaframestruct {
+	short linearization;
+};
+
+struct a2framestruct {
+	unsigned char language;
+	unsigned char configuration;
+};
+
+struct a7framestruct {
+	unsigned char devicetype;
+};
+
+struct a4framestruct {
+	short valveoff;
+	short valveon;
+};
+
+struct a6framestruct {
+	short fractional;
+	short main;
+};
+
+struct frame75struct {
+	short sensivity;
+	short outputwindow;
+	short windowoffset;
+};
+
+struct frame76struct {
+	short pmtsupplyshift;
+};
+
+struct frame77struct {
+	short pmtsupplysensivity;
+};
+
 void oshibka(char *oshibkaname)
 {
 	LPVOID lpMsgBuf;
@@ -143,9 +215,34 @@ int main(int argc, char *argv[])
 
 	/*ReadFile(serial, frame, 22, &numread, NULL);
 	printf("read %d\n", numread);*/
-	int a5counter = 0;
-	int afcounter = 0;
 	struct a5framestruct a5frame;
+	struct afframestruct afframe;
+	struct aeframestruct aeframe;
+	struct a0framestruct a0frame;
+	struct a1framestruct a1frame;
+	struct adframestruct adframe;
+	struct aaframestruct aaframe;
+	struct a2framestruct a2frame;
+	struct a7framestruct a7frame;
+	struct a4framestruct a4frame;
+	struct a6framestruct a6frame;
+	struct frame75struct frame75;
+	struct frame76struct frame76;
+	struct frame77struct frame77;
+	long a5counter = 0;
+	long afcounter = 0;
+	long aecounter = 0;
+	long a0counter = 0;
+	long a1counter = 0;
+	long adcounter = 0;
+	long aacounter = 0;
+	long a2counter = 0;
+	long a7counter = 0;
+	long a4counter = 0;
+	long a6counter = 0;
+	long counter75 = 0;
+	long counter76 = 0;
+	long counter77 = 0;
 
 	readframe(serial, 21, &a5frame);
 
@@ -160,8 +257,7 @@ int main(int argc, char *argv[])
 			case 0xA5:
 				if (!readframe(serial, 21, &a5frame))
 				{
-					printf("a5 counter %d\n", a5counter++);
-					printf("%6d %6d %6d %6d %6d %6d %6d %6d\n",
+					printf("%6ld 0xA5 %6d %6d %6d %6d %6d %6d %6d %6d\n", a5counter++,
 						a5frame.currentpmt,
 						a5frame.valueamp1,
 						a5frame.valueamp2,
@@ -170,6 +266,116 @@ int main(int argc, char *argv[])
 						a5frame.autosampler,
 						a5frame.temperature,
 						a5frame.currentbattery);
+				}
+				break;
+			case 0xAF:
+				if (!readframe(serial, 16, &afframe))
+				{
+					printf("%6ld 0xAF %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d\n", afcounter++,
+						afframe.coefficentamp3,
+						afframe.coefficentamp2,
+						afframe.coefficentamp1,
+						afframe.dark_current,
+						afframe.biasamp3,
+						afframe.biasamp2,
+						afframe.biasamp1,
+						afframe.switch_threshhold,
+						afframe.coefficentcalib,
+						afframe.zerobias);
+				}
+			case 0xAE:
+				if (!readframe(serial, 8, &aeframe))
+				{
+					printf("%6ld 0xAE %6d %6d %6d %6d %6d %6d\n", aecounter++,
+						aeframe.timeaverage,
+						aeframe.timezero,
+						aeframe.timecumulation,
+						aeframe.timeintegration,
+						aeframe.lowerthreshold,
+						aeframe.upperthreshold);
+				}
+				break;
+			case 0xA0:
+				if (!readframe(serial, 4, &a0frame))
+				{
+					printf("%6ld 0xA0 %s\n", a0counter++,
+						a0frame.devicenumber);
+				}
+				break;
+			case 0xA1:
+				if (!readframe(serial, 25, &a1frame))
+				{
+					printf("%6ld 0xA1 %s\n", a1counter++,
+						a1frame.calibrationdate);
+				}
+				break;
+			case 0xAD:
+				if (!readframe(serial, 4, &adframe))
+				{
+					printf("%6ld 0xAD %d %d\n", adcounter++,
+						adframe.operatinglamp1,
+						adframe.operatinglamp2);
+				}
+				break;
+			case 0xAA:
+				if (!readframe(serial, 2, &aaframe))
+				{
+					printf("%6ld 0xAA %d\n", aacounter++,
+						aaframe.linearization);
+				}
+				break;
+			case 0xA2:
+				if (!readframe(serial, 2, &a2frame))
+				{
+					printf("%6ld 0xA2 %d %d\n", a2counter++,
+						a2frame.language,
+						a2frame.configuration);
+				}
+				break;
+			case 0xA7:
+				if (!readframe(serial, 1, &a7frame))
+				{
+					printf("%6ld 0xA7 %d\n", a7counter++,
+						a7frame.devicetype);
+				}
+				break;
+			case 0xA4:
+				if (!readframe(serial, 4, &a4frame))
+				{
+					printf("%6ld 0xA4 %d %d\n", a4counter++,
+						a4frame.valveoff,
+						a4frame.valveon);
+				}
+				break;
+			case 0xA6:
+				if (!readframe(serial, 4, &a6frame))
+				{
+					printf("%6ld 0xA6 %d\n", a6counter++,
+						a6frame.fractional,
+						a6frame.main);
+				}
+				break;
+			case 0x75:
+				if (!readframe(serial, 6, &frame75))
+				{
+					printf("%6ld 0xA6 %d %d %d\n", counter75++,
+						frame75.sensivity,
+						frame75.outputwindow,
+						frame75.windowoffset);
+				}
+				break;
+			case 0x76:
+				if (!readframe(serial, 2, &frame76))
+				{
+					printf("%6ld 0xA6 %d\n", counter76++,
+						frame76.pmtsupplyshift);
+				}
+				break;
+			case 0x77:
+				if (!readframe(serial, 2, &frame77))
+				{
+					printf("%6ld 0xA6 %d\n", counter77++,
+						frame77.pmtsupplysensivity);
 				}
 				break;
 			default:
