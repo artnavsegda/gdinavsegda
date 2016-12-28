@@ -26,7 +26,40 @@ int main()
 		exit(0);
 	}
 
-	//if (bind(sock,&server, sizeof(server)))
+	struct sockaddr_in server = {
+		.sin_family = AF_INET,
+		.sin_port = htons(1100),
+		.sin_addr.s_addr = htonl(INADDR_ANY)
+	};
+
+	if (bind(sock,&server, sizeof(server)) == SOCKET_ERROR)
+	{
+		printf("bind error");
+		closesocket(sock);
+		WSACleanup();
+		exit(0);
+	}
+
+	if (listen(sock, 10) == SOCKET_ERROR)
+	{
+		perror("listen error\n");
+		closesocket(sock);
+		WSACleanup();
+		exit(0);
+	}
+
+	while (1)
+	{
+		SOCKET msgsock = accept(sock, NULL, NULL);
+		if (msgsock == INVALID_SOCKET)
+		{
+			printf("accept error");
+			closesocket(sock);
+			WSACleanup();
+			exit(0);
+		}
+
+	}
 
 	return 0;
 }
