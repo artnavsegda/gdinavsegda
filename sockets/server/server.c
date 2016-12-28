@@ -19,7 +19,7 @@ int main()
 
 	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	if (sock == INVALID_SOCKET)
+	if (sock == -1)
 	{
 		printf("socket error\n");
 		WSACleanup();
@@ -29,21 +29,21 @@ int main()
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
 		.sin_port = htons(1100),
-		.sin_addr.s_addr = htonl(INADDR_ANY)
+		.sin_addr.s_addr = INADDR_ANY
 	};
 
-	if (bind(sock,&server, sizeof(server)) == SOCKET_ERROR)
+	if (bind(sock,(struct sockaddr *)&server, sizeof(server)) == -1)
 	{
 		printf("bind error");
-		closesocket(sock);
+		close(sock);
 		WSACleanup();
 		exit(0);
 	}
 
-	if (listen(sock, 10) == SOCKET_ERROR)
+	if (listen(sock, 10) == -1)
 	{
 		perror("listen error\n");
-		closesocket(sock);
+		close(sock);
 		WSACleanup();
 		exit(0);
 	}
@@ -51,10 +51,10 @@ int main()
 	while (1)
 	{
 		SOCKET msgsock = accept(sock, NULL, NULL);
-		if (msgsock == INVALID_SOCKET)
+		if (msgsock == -1)
 		{
 			printf("accept error");
-			closesocket(sock);
+			close(sock);
 			WSACleanup();
 			exit(0);
 		}

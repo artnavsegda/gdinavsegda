@@ -19,7 +19,7 @@ int main()
 
 	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	if (sock == INVALID_SOCKET)
+	if (sock == -1)
 	{
 		printf("socket error\n");
 		WSACleanup();
@@ -27,18 +27,24 @@ int main()
 	}
 
 	struct sockaddr_in client = {
+		.sin_addr.s_addr = inet_addr("127.0.0.1"),
 		.sin_family = AF_INET,
 		.sin_port = htons(1100)
 	};
 
-	InetPton(AF_INET, "127.0.0.1", &client.sin_addr);
-
 	if (connect(sock, (struct sockaddr *)&client, sizeof(client)) == -1)
 	{
-		perror("connect error");
+		printf("connect error\n");
 		close(sock);
 		exit(0);
 	}
+
+	send(sock, "hello", 6, 0);
+
+	shutdown(sock, 2);
+	close(sock);
+
+
 
 	return 0;
 }
