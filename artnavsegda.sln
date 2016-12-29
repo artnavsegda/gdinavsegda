@@ -11,14 +11,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gltouch", "gltouch\gltouch.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glroll", "glroll\glroll.vcxproj", "{7D3D8B18-721F-49E8-B177-FB27040B0CBB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "modbus", "libmodbus\src\win32\modbus.vcxproj", "{498E0845-C7F4-438B-8EDE-EF7FC9A74430}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbget", "antrack\antrack.vcxproj", "{15931BF4-3116-4A95-BA90-FD6428E7363F}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbset", "mbset\mbset.vcxproj", "{D0ED8803-7278-4828-BD6A-8D7F01E7D6C6}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbserver", "mbserver\mbserver.vcxproj", "{35122A14-E4CC-4B73-8CEB-FE14D0D4B659}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "serial", "serial\serial.vcxproj", "{8D47B3CB-DE6D-4EC3-9C7B-0C2DFBEA3779}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "winhello", "winhello\winhello.vcxproj", "{00915DEE-69E0-4596-9607-407A7F1811C5}"
@@ -28,8 +20,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dialog", "dialog\dialog.vcxproj", "{820BD2B5-6057-4C1A-94F6-DCFB9A152BE1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "asyncserial", "asyncserial\asyncserial.vcxproj", "{ADF16D22-E4C4-4573-9178-1C6361074F61}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbtable", "mbtable\mbtable.vcxproj", "{44FAFB26-41AC-421C-89CB-86B95551D825}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "serialrecord", "serialrecord\serialrecord.vcxproj", "{5303AF59-5520-4E48-BDA4-7D69332B2550}"
 EndProject
@@ -50,14 +40,6 @@ Global
 		{2DFA4284-F887-44BE-92FE-6AF57B466009}.Release|x86.Build.0 = Release|Win32
 		{7D3D8B18-721F-49E8-B177-FB27040B0CBB}.Release|x86.ActiveCfg = Release|Win32
 		{7D3D8B18-721F-49E8-B177-FB27040B0CBB}.Release|x86.Build.0 = Release|Win32
-		{498E0845-C7F4-438B-8EDE-EF7FC9A74430}.Release|x86.ActiveCfg = Release|Win32
-		{498E0845-C7F4-438B-8EDE-EF7FC9A74430}.Release|x86.Build.0 = Release|Win32
-		{15931BF4-3116-4A95-BA90-FD6428E7363F}.Release|x86.ActiveCfg = Release|Win32
-		{15931BF4-3116-4A95-BA90-FD6428E7363F}.Release|x86.Build.0 = Release|Win32
-		{D0ED8803-7278-4828-BD6A-8D7F01E7D6C6}.Release|x86.ActiveCfg = Release|Win32
-		{D0ED8803-7278-4828-BD6A-8D7F01E7D6C6}.Release|x86.Build.0 = Release|Win32
-		{35122A14-E4CC-4B73-8CEB-FE14D0D4B659}.Release|x86.ActiveCfg = Release|Win32
-		{35122A14-E4CC-4B73-8CEB-FE14D0D4B659}.Release|x86.Build.0 = Release|Win32
 		{8D47B3CB-DE6D-4EC3-9C7B-0C2DFBEA3779}.Release|x86.ActiveCfg = Release|Win32
 		{8D47B3CB-DE6D-4EC3-9C7B-0C2DFBEA3779}.Release|x86.Build.0 = Release|Win32
 		{00915DEE-69E0-4596-9607-407A7F1811C5}.Release|x86.ActiveCfg = Release|Win32
@@ -68,8 +50,6 @@ Global
 		{820BD2B5-6057-4C1A-94F6-DCFB9A152BE1}.Release|x86.Build.0 = Release|Win32
 		{ADF16D22-E4C4-4573-9178-1C6361074F61}.Release|x86.ActiveCfg = Release|Win32
 		{ADF16D22-E4C4-4573-9178-1C6361074F61}.Release|x86.Build.0 = Release|Win32
-		{44FAFB26-41AC-421C-89CB-86B95551D825}.Release|x86.ActiveCfg = Release|Win32
-		{44FAFB26-41AC-421C-89CB-86B95551D825}.Release|x86.Build.0 = Release|Win32
 		{5303AF59-5520-4E48-BDA4-7D69332B2550}.Release|x86.ActiveCfg = Release|Win32
 		{5303AF59-5520-4E48-BDA4-7D69332B2550}.Release|x86.Build.0 = Release|Win32
 		{3064FFF3-C87B-4C75-9AD3-29320BF29B6F}.Release|x86.ActiveCfg = Release|Win32

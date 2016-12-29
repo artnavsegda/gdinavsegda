@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26014.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "modbus", "libmodbus\src\win32\modbus.vcxproj", "{498E0845-C7F4-438B-8EDE-EF7FC9A74430}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbserver", "mbserver\mbserver.vcxproj", "{35122A14-E4CC-4B73-8CEB-FE14D0D4B659}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbset", "mbset\mbset.vcxproj", "{D0ED8803-7278-4828-BD6A-8D7F01E7D6C6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbtable", "mbtable\mbtable.vcxproj", "{44FAFB26-41AC-421C-89CB-86B95551D825}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{498E0845-C7F4-438B-8EDE-EF7FC9A74430}.Release|x86.ActiveCfg = Release|Win32
+		{498E0845-C7F4-438B-8EDE-EF7FC9A74430}.Release|x86.Build.0 = Release|Win32
+		{35122A14-E4CC-4B73-8CEB-FE14D0D4B659}.Release|x86.ActiveCfg = Release|Win32
+		{35122A14-E4CC-4B73-8CEB-FE14D0D4B659}.Release|x86.Build.0 = Release|Win32
+		{D0ED8803-7278-4828-BD6A-8D7F01E7D6C6}.Release|x86.ActiveCfg = Release|Win32
+		{D0ED8803-7278-4828-BD6A-8D7F01E7D6C6}.Release|x86.Build.0 = Release|Win32
+		{44FAFB26-41AC-421C-89CB-86B95551D825}.Release|x86.ActiveCfg = Release|Win32
+		{44FAFB26-41AC-421C-89CB-86B95551D825}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

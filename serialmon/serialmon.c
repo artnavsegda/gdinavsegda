@@ -9,7 +9,7 @@ struct dataunit {
 	unsigned long millis;
 };
 
-struct dataunit datamassive[10000];
+struct dataunit datamassive[100000];
 
 void moroka(void)
 {
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 			position_shift = datamassive[x + i].millis - datamassive[x].millis;
 			rx_shift = datamassive[x + i].rxnum;
 
-			mvprintw(10 + rx_shift, 10 + (i * 2) + position_shift, "%02X", datamassive[x + i].recbyte);
+			mvprintw(10 + rx_shift, 10 + (position_shift*2), "%02X", datamassive[x + i].recbyte);
 		}
 
 		//		position_shift = datamassive[x+1].millis - datamassive[x].millis;
