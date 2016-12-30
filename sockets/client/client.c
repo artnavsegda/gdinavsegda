@@ -4,6 +4,15 @@
 
 #pragma comment(lib, "Wsock32.lib")
 
+void oshibka(char *oshibkaname)
+{
+	LPVOID lpMsgBuf;
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, WSAGetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
+	printf("%s: %s\n", oshibkaname, lpMsgBuf);
+	LocalFree(lpMsgBuf);
+	exit(1);
+}
+
 int main()
 {
 	WSADATA wsaData;
@@ -25,7 +34,7 @@ int main()
 
 	if (sock == INVALID_SOCKET)
 	{
-		printf("socket error\n");
+		oshibka("socket");
 		WSACleanup();
 		return 1;
 	}
@@ -42,7 +51,7 @@ int main()
 
 	if (connect(sock, (struct sockaddr *)&client, sizeof(client)) == SOCKET_ERROR)
 	{
-		printf("connect error\n");
+		oshibka("connect");
 		closesocket(sock);
 		exit(0);
 	}
