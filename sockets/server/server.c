@@ -6,7 +6,7 @@
 
 int main()
 {
-	int buf[100];
+	char buf[100];
 	WSADATA wsaData;
 	int iResult;
 
@@ -36,7 +36,7 @@ int main()
 	if (bind(sock,(struct sockaddr *)&server, sizeof(server)) == -1)
 	{
 		printf("bind error");
-		close(sock);
+		closesocket(sock);
 		WSACleanup();
 		return 1;
 	}
@@ -44,7 +44,7 @@ int main()
 	if (listen(sock, 10) == -1)
 	{
 		perror("listen error\n");
-		close(sock);
+		closesocket(sock);
 		WSACleanup();
 		return 1;
 	}
@@ -55,7 +55,7 @@ int main()
 		if (msgsock == -1)
 		{
 			printf("accept error");
-			close(sock);
+			closesocket(sock);
 			WSACleanup();
 			return 1;
 		}
@@ -64,13 +64,13 @@ int main()
 		if (shutdown(msgsock, 2) == -1)
 		{
 			printf("shutdown error");
-			close(msgsock);
-			close(sock);
+			closesocket(msgsock);
+			closesocket(sock);
 			return 1;
 		}
-		close(msgsock);
+		closesocket(msgsock);
 	}
-	close(sock);
+	closesocket(sock);
 
 	return 0;
 }

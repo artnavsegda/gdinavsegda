@@ -35,16 +35,14 @@ int main()
 	if (connect(sock, (struct sockaddr *)&client, sizeof(client)) == -1)
 	{
 		printf("connect error\n");
-		close(sock);
+		closesocket(sock);
 		exit(0);
 	}
 
 	send(sock, "hello", 6, 0);
 
 	shutdown(sock, 2);
-	close(sock);
-
-
+	closesocket(sock);
 
 	return 0;
 }
