@@ -19,7 +19,7 @@ int main()
 
 	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	if (sock == -1)
+	if (sock == INVALID_SOCKET)
 	{
 		printf("socket error\n");
 		WSACleanup();
@@ -32,7 +32,7 @@ int main()
 		.sin_port = htons(1100)
 	};
 
-	if (connect(sock, (struct sockaddr *)&client, sizeof(client)) == -1)
+	if (connect(sock, (struct sockaddr *)&client, sizeof(client)) == SOCKET_ERROR)
 	{
 		printf("connect error\n");
 		closesocket(sock);

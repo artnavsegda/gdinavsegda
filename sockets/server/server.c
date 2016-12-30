@@ -6,7 +6,7 @@
 
 int main()
 {
-	char buf[100];
+	int buf[100];
 	WSADATA wsaData;
 	int iResult;
 
@@ -20,7 +20,7 @@ int main()
 
 	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	if (sock == -1)
+	if (sock == INVALID_SOCKET)
 	{
 		printf("socket error\n");
 		WSACleanup();
@@ -33,7 +33,7 @@ int main()
 		.sin_addr.s_addr = INADDR_ANY
 	};
 
-	if (bind(sock,(struct sockaddr *)&server, sizeof(server)) == -1)
+	if (bind(sock,(struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR)
 	{
 		printf("bind error");
 		closesocket(sock);
@@ -41,7 +41,7 @@ int main()
 		return 1;
 	}
 
-	if (listen(sock, 10) == -1)
+	if (listen(sock, 10) == SOCKET_ERROR)
 	{
 		perror("listen error\n");
 		closesocket(sock);
@@ -52,16 +52,16 @@ int main()
 	while (1)
 	{
 		SOCKET msgsock = accept(sock, NULL, NULL);
-		if (msgsock == -1)
+		if (msgsock == INVALID_SOCKET)
 		{
 			printf("accept error");
 			closesocket(sock);
 			WSACleanup();
 			return 1;
 		}
-		while (recv(msgsock, buf, 100, 0) != -1)
+		while (recv(msgsock, buf, 100, 0) != SOCKET_ERROR)
 			;
-		if (shutdown(msgsock, 2) == -1)
+		if (shutdown(msgsock, 2) == SOCKET_ERROR)
 		{
 			printf("shutdown error");
 			closesocket(msgsock);
