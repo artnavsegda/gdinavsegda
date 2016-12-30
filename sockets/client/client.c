@@ -16,6 +16,10 @@ int main()
 		printf("WSAStartup failed: %d\n", iResult);
 		return 1;
 	}
+	else
+	{
+		printf("WSAStartup ok\n");
+	}
 
 	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
@@ -24,6 +28,10 @@ int main()
 		printf("socket error\n");
 		WSACleanup();
 		return 1;
+	}
+	else
+	{
+		printf("socket ok\n");
 	}
 
 	struct sockaddr_in client = {
@@ -37,6 +45,10 @@ int main()
 		printf("connect error\n");
 		closesocket(sock);
 		exit(0);
+	}
+	else
+	{
+		printf("connect ok\n");
 	}
 
 	send(sock, "hello", 6, 0);
