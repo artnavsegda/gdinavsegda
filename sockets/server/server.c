@@ -17,6 +17,10 @@ int main()
 		printf("WSAStartup failed: %d\n", iResult);
 		return 1;
 	}
+	else
+	{
+		printf("WSAStartup ok\n");
+	}
 
 	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
@@ -25,6 +29,10 @@ int main()
 		printf("socket error\n");
 		WSACleanup();
 		return 1;
+	}
+	else
+	{
+		printf("socket ok\n");
 	}
 
 	struct sockaddr_in server = {
@@ -35,38 +43,55 @@ int main()
 
 	if (bind(sock,(struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR)
 	{
-		printf("bind error");
+		printf("bind error\n");
 		closesocket(sock);
 		WSACleanup();
 		return 1;
+	}
+	else
+	{
+		printf("bind ok\n");
 	}
 
 	if (listen(sock, 10) == SOCKET_ERROR)
 	{
-		perror("listen error\n");
+		printf("listen error\n");
 		closesocket(sock);
 		WSACleanup();
 		return 1;
 	}
+	else
+	{
+		printf("listen ok\n");
+	}
+
 
 	while (1)
 	{
 		SOCKET msgsock = accept(sock, NULL, NULL);
 		if (msgsock == INVALID_SOCKET)
 		{
-			printf("accept error");
+			printf("accept error\n");
 			closesocket(sock);
 			WSACleanup();
 			return 1;
+		}
+		else
+		{
+			printf("accept ok\n");
 		}
 		while (recv(msgsock, buf, 100, 0) != SOCKET_ERROR)
 			;
 		if (shutdown(msgsock, 2) == SOCKET_ERROR)
 		{
-			printf("shutdown error");
+			printf("shutdown error\n");
 			closesocket(msgsock);
 			closesocket(sock);
 			return 1;
+		}
+		else
+		{
+			printf("shutdown ok\n");
 		}
 		closesocket(msgsock);
 	}
