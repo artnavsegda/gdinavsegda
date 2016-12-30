@@ -4,6 +4,15 @@
 
 #pragma comment(lib, "Wsock32.lib")
 
+void oshibka(char *oshibkaname)
+{
+	LPVOID lpMsgBuf;
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, WSAGetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
+	printf("%s: %s\n", oshibkaname, lpMsgBuf);
+	LocalFree(lpMsgBuf);
+	exit(1);
+}
+
 int main()
 {
 	int buf[100];
@@ -26,7 +35,7 @@ int main()
 
 	if (sock == INVALID_SOCKET)
 	{
-		printf("socket error\n");
+		oshibka("socket");
 		WSACleanup();
 		return 1;
 	}
@@ -43,7 +52,7 @@ int main()
 
 	if (bind(sock,(struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR)
 	{
-		printf("bind error\n");
+		oshibka("bind");
 		closesocket(sock);
 		WSACleanup();
 		return 1;
@@ -55,7 +64,7 @@ int main()
 
 	if (listen(sock, 10) == SOCKET_ERROR)
 	{
-		printf("listen error\n");
+		oshibka("listen");
 		closesocket(sock);
 		WSACleanup();
 		return 1;
@@ -71,7 +80,7 @@ int main()
 		SOCKET msgsock = accept(sock, NULL, NULL);
 		if (msgsock == INVALID_SOCKET)
 		{
-			printf("accept error\n");
+			oshibka("accept");
 			closesocket(sock);
 			WSACleanup();
 			return 1;
@@ -84,7 +93,7 @@ int main()
 			;
 		if (shutdown(msgsock, 2) == SOCKET_ERROR)
 		{
-			printf("shutdown error\n");
+			oshibka("shutdown");
 			closesocket(msgsock);
 			closesocket(sock);
 			return 1;
