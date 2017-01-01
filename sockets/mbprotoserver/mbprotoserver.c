@@ -199,7 +199,7 @@ int main()
 			break;
 		case 15:
 		case 16:
-			askmbframe.length = 6;
+			askmbframe.length = htons(6);
 			break;
 		default:
 			break;
