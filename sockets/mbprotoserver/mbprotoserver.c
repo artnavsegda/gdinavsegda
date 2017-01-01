@@ -15,6 +15,7 @@ void oshibka(char *oshibkaname)
 
 int main()
 {
+	int buf[100];
 	WSADATA wsaData;
 	int iResult;
 
@@ -31,6 +32,7 @@ int main()
 	}
 
 	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+
 	if (sock == INVALID_SOCKET)
 	{
 		oshibka("socket");
@@ -42,41 +44,65 @@ int main()
 		printf("socket ok\n");
 	}
 
-	struct sockaddr_in client = {
-		.sin_addr.s_addr = inet_addr("192.168.1.150"),
+	struct sockaddr_in server = {
 		.sin_family = AF_INET,
-		.sin_port = htons(502)
+		.sin_port = htons(1100),
+		.sin_addr.s_addr = INADDR_ANY
 	};
 
-	if (connect(sock, (struct sockaddr *)&client, sizeof(client)) == SOCKET_ERROR)
+	if (bind(sock, (struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR)
 	{
-		oshibka("connect");
+		oshibka("bind");
 		closesocket(sock);
-		exit(0);
+		WSACleanup();
+		return 1;
 	}
 	else
 	{
-		printf("connect ok\n");
+		printf("bind ok\n");
 	}
 
-	int numwrite = send(sock, "hello", 6, 0);
-
-	if (numwrite = SOCKET_ERROR)
+	if (listen(sock, 10) == SOCKET_ERROR)
 	{
-		oshibka("send");
+		oshibka("listen");
+		closesocket(sock);
+		WSACleanup();
+		return 1;
 	}
 	else
 	{
-		printf("send %d bytes ok\n", numwrite);
+		printf("listen ok\n");
 	}
 
-	if (shutdown(sock, 2) == SOCKET_ERROR)
+
+	while (1)
 	{
-		oshibka("send");
-	}
-	else
-	{
-		printf("shutdown ok\n");
+		SOCKET msgsock = accept(sock, NULL, NULL);
+		if (msgsock == INVALID_SOCKET)
+		{
+			oshibka("accept");
+			closesocket(sock);
+			WSACleanup();
+			return 1;
+		}
+		else
+		{
+			printf("accept ok\n");
+		}
+		while (recv(msgsock, buf, 100, 0) != SOCKET_ERROR)
+			;
+		if (shutdown(msgsock, 2) == SOCKET_ERROR)
+		{
+			oshibka("shutdown");
+			closesocket(msgsock);
+			closesocket(sock);
+			return 1;
+		}
+		else
+		{
+			printf("shutdown ok\n");
+		}
+		closesocket(msgsock);
 	}
 	closesocket(sock);
 
