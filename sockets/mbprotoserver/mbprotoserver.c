@@ -20,10 +20,29 @@ struct askreadregstruct {
 
 struct reqreadcoilsstruct {
 	unsigned char bytestofollow;
-	unsigned char coils[256];
+	unsigned char coils[254];
 };
 
 struct reqreadwordstruct {
+	unsigned char bytestofollow;
+	unsigned short registers[127];
+};
+
+struct writeregstruct {
+	unsigned short regaddress;
+	unsigned short regvalue;
+};
+
+struct writemulticoilstruct {
+	unsigned short firstreg;
+	unsigned short regnumber;
+	unsigned char bytestofollow;
+	unsigned char coils[256];
+};
+
+struct writemultiregstruct {
+	unsigned short firstreg;
+	unsigned short regnumber;
 	unsigned char bytestofollow;
 	unsigned short registers[127];
 };
@@ -32,6 +51,9 @@ union pdudataunion {
 	struct askreadregstruct askreadregs;
 	struct reqreadcoilsstruct reqreadcoils;
 	struct reqreadwordstruct reqreadholdings;
+	struct writeregstruct writereg;
+	struct writemulticoilstruct writemulticoil;
+	struct writemultiregstruct writemultireg;
 	unsigned short words[127];
 	unsigned char bytes[254];
 };
@@ -170,6 +192,16 @@ int main()
 			printf("numer of registers requested %d\n", ntohs(askmbframe.pdu.data.askreadregs.regnumber));
 			askmbframe.pdu.data.reqreadholdings.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) * 2;
 			askmbframe.length = htons(askmbframe.pdu.data.reqreadholdings.bytestofollow + 3);
+			break;
+		case 5:
+		case 6:
+			//same as request
+			break;
+		case 15:
+		case 16:
+
+			break;
+		default:
 			break;
 		}
 
