@@ -186,12 +186,18 @@ int main()
 			if ((ntohs(askmbframe.pdu.data.askreadregs.regnumber) % 8)>0)
 				askmbframe.pdu.data.reqreadcoils.bytestofollow++;
 			askmbframe.length = htons(askmbframe.pdu.data.reqreadcoils.bytestofollow + 3);
+			// fill all requested coil bytes with zeroes
+			for (int i = 0; i < askmbframe.pdu.data.reqreadcoils.bytestofollow; i++)
+				askmbframe.pdu.data.reqreadcoils.coils[i] = 0x00;
 			break;
 		case 3:
 		case 4:
 			printf("numer of registers requested %d\n", ntohs(askmbframe.pdu.data.askreadregs.regnumber));
 			askmbframe.pdu.data.reqreadholdings.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) * 2;
 			askmbframe.length = htons(askmbframe.pdu.data.reqreadholdings.bytestofollow + 3);
+			// fill every requested register with 0xABCD
+			for (int i = 0; i < ntohs(askmbframe.pdu.data.askreadregs.regnumber);i++)
+				askmbframe.pdu.data.reqreadholdings.registers[i] = htons(0xABCD);
 			break;
 		case 5:
 		case 6:
