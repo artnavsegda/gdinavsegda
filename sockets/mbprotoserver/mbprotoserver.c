@@ -18,14 +18,9 @@ struct askreadregstruct {
 	unsigned short regnumber;
 };
 
-struct reqreadcoilsstruct {
+struct reqreadstruct {
 	unsigned char bytestofollow;
-	unsigned char coils[254];
-};
-
-struct reqreadwordstruct {
-	unsigned char bytestofollow;
-	unsigned short registers[127];
+	unsigned char bytes[254];
 };
 
 struct writeregstruct {
@@ -49,8 +44,7 @@ struct writemultiregstruct {
 
 union pdudataunion {
 	struct askreadregstruct askreadregs;
-	struct reqreadcoilsstruct reqreadcoils;
-	struct reqreadwordstruct reqreadholdings;
+	struct reqreadstruct reqread;
 	struct writeregstruct writereg;
 	struct writemulticoilstruct writemulticoil;
 	struct writemultiregstruct writemultireg;
@@ -113,7 +107,7 @@ int main()
 
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
-		.sin_port = htons(1100),
+		.sin_port = htons(502),
 		.sin_addr.s_addr = INADDR_ANY
 	};
 
@@ -184,26 +178,32 @@ int main()
 			printf("\n");
 		}
 
+		int firstrequest = 0;
+		int requestnumber = 0;
+
 		switch (askmbframe.pdu.fncode)
 		{
 		case 1:
 		case 2:
-			askmbframe.pdu.data.reqreadcoils.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) / 8;
+			askmbframe.pdu.data.reqread.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) / 8;
 			if ((ntohs(askmbframe.pdu.data.askreadregs.regnumber) % 8)>0)
-				askmbframe.pdu.data.reqreadcoils.bytestofollow++;
-			askmbframe.length = htons(askmbframe.pdu.data.reqreadcoils.bytestofollow + 3);
+				askmbframe.pdu.data.reqread.bytestofollow++;
+			askmbframe.length = htons(askmbframe.pdu.data.reqread.bytestofollow + 3);
 			// fill all requested coil bytes with zeroes
-			for (int i = 0; i < askmbframe.pdu.data.reqreadcoils.bytestofollow; i++)
-				askmbframe.pdu.data.reqreadcoils.coils[i] = 0x00;
+			for (int i = 0; i < askmbframe.pdu.data.reqread.bytestofollow; i++)
+				askmbframe.pdu.data.reqread.bytes[i] = 0x00;
 			break;
 		case 3:
 		case 4:
-			printf("numer of registers requested %d\n", ntohs(askmbframe.pdu.data.askreadregs.regnumber));
-			askmbframe.pdu.data.reqreadholdings.bytestofollow = ntohs(askmbframe.pdu.data.askreadregs.regnumber) * 2;
-			askmbframe.length = htons(askmbframe.pdu.data.reqreadholdings.bytestofollow + 3);
+			firstrequest = ntohs(askmbframe.pdu.data.askreadregs.firstreg);
+			printf("Requesing register starting from: %d\n", firstrequest);
+			requestnumber = ntohs(askmbframe.pdu.data.askreadregs.regnumber);
+			printf("Number of registers requested : %d\n", requestnumber);
+			askmbframe.pdu.data.reqread.bytestofollow = requestnumber * 2;
+			askmbframe.length = htons(askmbframe.pdu.data.reqread.bytestofollow + 3);
 			// fill every requested register with 0xABCD
-			for (int i = 0; i < ntohs(askmbframe.pdu.data.askreadregs.regnumber);i++)
-				askmbframe.pdu.data.reqreadholdings.registers[i] = htons(0xABCD);
+			for (int i = 0; i < requestnumber;i++)
+				((unsigned short *)&askmbframe.pdu.data.reqread.bytes)[i] = htons(0xABCD);
 			break;
 		case 5:
 		case 6:
@@ -221,7 +221,7 @@ int main()
 		printf("replylength %d\n", replylength);
 
 		int numwrite = send(msgsock, &askmbframe, replylength, 0);
-		if (numwrite = SOCKET_ERROR)
+		if (numwrite == SOCKET_ERROR)
 		{
 			oshibka("send");
 		}
