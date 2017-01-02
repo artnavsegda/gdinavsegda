@@ -9,17 +9,13 @@ int main(int argc, char *argv[])
 {
 	modbus_t *mb;
 	uint16_t tab_reg[256];
-	uint8_t bit_reg[256];
 	int rc;
-	int i;
 
-	if (argc != 4)
+	if (argc != 3)
 	{
-		printf("name ip adress register and value\n");
+		printf("name ip adress and register\n");
 		exit(1);
 	}
-	int setvalue;
-	sscanf_s(argv[3], "%d", &setvalue);
 	int setregister;
 	sscanf_s(argv[2], "%d", &setregister);
 
@@ -30,15 +26,16 @@ int main(int argc, char *argv[])
 		modbus_free(mb);
 		return -1;
 	}
-	printf("%d=%d\n", setregister, setvalue);
 
 	modbus_set_slave(mb, 50);
 
-	rc = modbus_write_register(mb, setregister, setvalue);
+	rc = modbus_read_registers(mb, setregister, 1, tab_reg);
 	if (rc == -1) {
 		fprintf(stderr, "write registers: %s\n", modbus_strerror(errno));
 		return -1;
 	}
+
+	printf("%d (0x%X)\n", tab_reg[0], tab_reg[0]);
 
 	modbus_close(mb);
 	modbus_free(mb);
