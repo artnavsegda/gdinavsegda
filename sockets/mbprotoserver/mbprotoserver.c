@@ -74,6 +74,12 @@ struct mbframestruct {
 
 struct mbframestruct askmbframe;
 
+// example modbus data table
+unsigned short offset = 20; //starting postion in register data
+unsigned short table[100]; //actual registers data
+unsigned short amount = 100; //maximum allowed position to read
+
+
 int main()
 {
 	int buf[100];
