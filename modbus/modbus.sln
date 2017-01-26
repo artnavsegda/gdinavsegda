@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbtable", "mbtable\mbtable.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbserialset", "mbserialset\mbserialset.vcxproj", "{2F5037DF-07CB-4F68-A054-61C5432DAA1C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbget", "mbget\mbget.vcxproj", "{3B716F90-EEF5-49D7-9AF3-F042CF78834E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Release|x86 = Release|x86
@@ -29,6 +31,8 @@ Global
 		{2F5037DF-07CB-4F68-A054-61C5432DAA1C}.Release|x86.ActiveCfg = Release|Win32
 		{2F5037DF-07CB-4F68-A054-61C5432DAA1C}.Release|x86.Build.0 = Release|Win32
 		{2F5037DF-07CB-4F68-A054-61C5432DAA1C}.Release|x86.Deploy.0 = Release|Win32
+		{3B716F90-EEF5-49D7-9AF3-F042CF78834E}.Release|x86.ActiveCfg = Release|Win32
+		{3B716F90-EEF5-49D7-9AF3-F042CF78834E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

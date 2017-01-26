@@ -31,7 +31,6 @@ int main()
 	}
 
 	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-
 	if (sock == INVALID_SOCKET)
 	{
 		oshibka("socket");
@@ -44,9 +43,9 @@ int main()
 	}
 
 	struct sockaddr_in client = {
-		.sin_addr.s_addr = inet_addr("127.0.0.1"),
+		.sin_addr.s_addr = inet_addr("192.168.1.150"),
 		.sin_family = AF_INET,
-		.sin_port = htons(1100)
+		.sin_port = htons(502)
 	};
 
 	if (connect(sock, (struct sockaddr *)&client, sizeof(client)) == SOCKET_ERROR)
@@ -60,9 +59,25 @@ int main()
 		printf("connect ok\n");
 	}
 
-	send(sock, "hello", 6, 0);
+	int numwrite = send(sock, "hello", 6, 0);
 
-	shutdown(sock, 2);
+	if (numwrite = SOCKET_ERROR)
+	{
+		oshibka("send");
+	}
+	else
+	{
+		printf("send %d bytes ok\n", numwrite);
+	}
+
+	if (shutdown(sock, 2) == SOCKET_ERROR)
+	{
+		oshibka("send");
+	}
+	else
+	{
+		printf("shutdown ok\n");
+	}
 	closesocket(sock);
 
 	return 0;
