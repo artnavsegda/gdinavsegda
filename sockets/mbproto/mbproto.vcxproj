@@ -10,7 +10,7 @@
     <ProjectGuid>{BA45DB80-BC0D-45DD-902A-B98689B775AD}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>mbproto</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

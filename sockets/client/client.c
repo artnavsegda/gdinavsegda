@@ -59,7 +59,9 @@ int main()
 		printf("connect ok\n");
 	}
 
-	int numwrite = send(sock, "hello", 6, 0);
+	unsigned int test = 0xABCD;
+
+	int numwrite = send(sock, (char *)&test, 2, 0);
 
 	if (numwrite = SOCKET_ERROR)
 	{
@@ -72,7 +74,7 @@ int main()
 
 	if (shutdown(sock, 2) == SOCKET_ERROR)
 	{
-		oshibka("send");
+		oshibka("shutdown");
 	}
 	else
 	{

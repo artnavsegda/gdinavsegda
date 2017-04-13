@@ -108,9 +108,9 @@ int main(int argc, char *argv[])
 	}
 
 	struct sockaddr_in client = {
-		.sin_addr.s_addr = inet_addr("127.0.0.1"),
+		.sin_addr.s_addr = inet_addr("192.168.1.150"),
 		.sin_family = AF_INET,
-		.sin_port = htons(1100)
+		.sin_port = htons(502)
 	};
 
 	if (connect(sock, (struct sockaddr *)&client, sizeof(client)) == SOCKET_ERROR)
