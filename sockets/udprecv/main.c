@@ -8,14 +8,14 @@ void oshibka(char *oshibkaname)
 {
 	LPVOID lpMsgBuf;
 	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, WSAGetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
-	printf("%s: %s\n", oshibkaname, (char *)lpMsgBuf);
+	printf("%s: %s\n", oshibkaname, lpMsgBuf);
 	LocalFree(lpMsgBuf);
 	exit(1);
 }
 
 int main()
 {
-	char buf[100];
+	unsigned char buf[100];
 	WSADATA wsaData;
 	int iResult;
 
@@ -31,7 +31,7 @@ int main()
 		printf("WSAStartup ok\n");
 	}
 
-	SOCKET sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	SOCKET sock = socket(PF_INET, SOCK_RAW, IPPROTO_UDP);
 
 	if (sock == INVALID_SOCKET)
 	{
@@ -90,6 +90,8 @@ int main()
 		printf("shutdown ok\n");
 	}
 	closesocket(sock);
+
+	getchar();
 
 	return 0;
 }
