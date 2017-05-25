@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26014.0
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "server", "server\server.vcxproj", "{66498339-3CCF-45BC-BEBB-1C3E23201C32}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbproto", "mbproto\mbproto.vcxproj", "{BA45DB80-BC0D-45DD-902A-B98689B775AD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mbprotoserver", "mbprotoserver\mbprotoserver.vcxproj", "{2B9F2212-7456-4970-BF36-4D69901F1318}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "udpsend", "udpsend\udpsend.vcxproj", "{FD325116-B6DE-466E-8FD0-BF71A8983B07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,8 @@ Global
 		{BA45DB80-BC0D-45DD-902A-B98689B775AD}.Release|x86.Build.0 = Release|Win32
 		{2B9F2212-7456-4970-BF36-4D69901F1318}.Release|x86.ActiveCfg = Release|Win32
 		{2B9F2212-7456-4970-BF36-4D69901F1318}.Release|x86.Build.0 = Release|Win32
+		{FD325116-B6DE-466E-8FD0-BF71A8983B07}.Release|x86.ActiveCfg = Release|Win32
+		{FD325116-B6DE-466E-8FD0-BF71A8983B07}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
