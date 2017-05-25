@@ -8,15 +8,14 @@ void oshibka(char *oshibkaname)
 {
 	LPVOID lpMsgBuf;
 	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, WSAGetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
-	printf("%s: %s\n", oshibkaname, lpMsgBuf);
+	printf("%s: %s\n", oshibkaname, (char *)lpMsgBuf);
 	LocalFree(lpMsgBuf);
 	exit(1);
 }
 
-char package[] = "hello world\n";
-
 int main()
 {
+	char buf[100];
 	WSADATA wsaData;
 	int iResult;
 
@@ -33,6 +32,7 @@ int main()
 	}
 
 	SOCKET sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
 	if (sock == INVALID_SOCKET)
 	{
 		oshibka("socket");
@@ -44,23 +44,41 @@ int main()
 		printf("socket ok\n");
 	}
 
-	struct sockaddr_in other = {
-		.sin_addr.s_addr = inet_addr("127.0.0.1"),
+	struct sockaddr_in server = {
 		.sin_family = AF_INET,
-		.sin_port = htons(1100)
+		.sin_port = htons(1100),
+		.sin_addr.s_addr = INADDR_ANY
 	};
 
+	struct sockaddr_in other;
 	int slen = sizeof(other);
 
-	int numwrite = sendto(sock, package, sizeof(package), 0, (struct sockaddr *)&other, slen);
-
-	if (numwrite == SOCKET_ERROR)
+	if (bind(sock, (struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR)
 	{
-		oshibka("send");
+		oshibka("bind");
+		closesocket(sock);
+		WSACleanup();
+		return 1;
 	}
 	else
 	{
-		printf("send %d bytes ok\n", numwrite);
+		printf("bind ok\n");
+	}
+
+	int numread = recvfrom(sock, buf, sizeof(buf), 0, (struct sockaddr *)&other, &slen);
+
+	if (numread == SOCKET_ERROR)
+	{
+		oshibka("recvfrom");
+	}
+	else
+	{
+		printf("recv %d bytes\n", numread);
+		for (int i = 0; i<numread; i++)
+		{
+			printf("0x%02X, ", buf[i]);
+		}
+		printf("\n");
 	}
 
 	if (shutdown(sock, 2) == SOCKET_ERROR)
