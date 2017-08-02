@@ -1,5 +1,3 @@
-#define _WINSOCKAPI_
-
 #include <windows.h>
 #include "winhello.h"
 #include "main.h"
