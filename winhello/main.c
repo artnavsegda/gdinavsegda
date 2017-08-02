@@ -24,7 +24,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 	};
 	RegisterClass(&wc);
 	HWND hwnd = CreateWindow("MainWindowClass", "Window", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, GetPrivateProfileInt("window", "width", CW_USEDEFAULT, configfile), GetPrivateProfileInt("window", "height", CW_USEDEFAULT, configfile), NULL, NULL, hInstance, NULL);
-	ShowWindow(hwnd, SW_SHOWDEFAULT);
+	ShowWindow(hwnd, nCmdShow);
 	while (GetMessage(&Msg, NULL, 0, 0) > 0)
 	{
 		TranslateMessage(&Msg);
