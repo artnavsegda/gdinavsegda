@@ -67,6 +67,7 @@ VOID OnPaint(HDC hdc)
 {
 	Graphics graphics(hdc);
 	Pen      pen(Color(255, 0, 0, 255));
+	graphics.SetSmoothingMode(SmoothingModeAntiAlias);
 	graphics.DrawLine(&pen, 0, 0, 200, 100);
 }
 
