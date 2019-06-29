@@ -13,6 +13,15 @@ void oshibka(char *oshibkaname)
 	exit(1);
 }
 
+struct sockaddr* resolve(char* hostname)
+{
+	struct sockaddr_in client;
+	client.sin_addr.s_addr = inet_addr(hostname);
+	client.sin_family = AF_INET;
+	client.sin_port = htons(502);
+	return (struct sockaddr*) &client;
+}
+
 int main(int argc, char* argv[])
 {
 	if (argc != 2)
@@ -47,13 +56,7 @@ int main(int argc, char* argv[])
 		printf("socket ok\n");
 	}
 
-	struct sockaddr_in client = {
-		.sin_addr.s_addr = inet_addr(argv[1]),
-		.sin_family = AF_INET,
-		.sin_port = htons(502)
-	};
-
-	if (connect(sock, (struct sockaddr *)&client, sizeof(client)) == SOCKET_ERROR)
+	if (connect(sock, resolve(argv[1]), sizeof(struct sockaddr_in)) == SOCKET_ERROR)
 	{
 		oshibka("connect");
 		closesocket(sock);
