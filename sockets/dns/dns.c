@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
 {
 	WSADATA wsaData;
 	int iResult;
+	struct hostent* host;
 
 	// Initialize Winsock
 	iResult = WSAStartup(MAKEWORD(1, 1), &wsaData);
@@ -30,57 +31,17 @@ int main(int argc, char *argv[])
 		printf("WSAStartup ok\n");
 	}
 
-	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (sock == INVALID_SOCKET)
-	{
-		oshibka("socket");
-		WSACleanup();
-		return 1;
-	}
-	else
-	{
-		printf("socket ok\n");
-	}
+	host = gethostbyname("artnavsegda.herokuapp.com");
 
-	struct sockaddr_in client = {
-		.sin_addr.s_addr = inet_addr("192.168.1.150"),
-		.sin_family = AF_INET,
-		.sin_port = htons(502)
-	};
-
-	if (connect(sock, (struct sockaddr*) & client, sizeof(client)) == SOCKET_ERROR)
+	if (host != NULL)
 	{
-		oshibka("connect");
-		closesocket(sock);
-		exit(0);
+		for (int i = 0; host->h_addr_list[i] != 0; i++)
+		{
+			struct in_addr addr;
+			addr.s_addr = *(u_long*)host->h_addr_list[i];
+			printf("ip: %s\n", inet_ntoa(addr));
+		}
 	}
-	else
-	{
-		printf("connect ok\n");
-	}
-
-	unsigned int test = 0xABCD;
-
-	int numwrite = send(sock, (char*)& test, 2, 0);
-
-	if (numwrite == SOCKET_ERROR)
-	{
-		oshibka("send");
-	}
-	else
-	{
-		printf("send %d bytes ok\n", numwrite);
-	}
-
-	if (shutdown(sock, 2) == SOCKET_ERROR)
-	{
-		oshibka("shutdown");
-	}
-	else
-	{
-		printf("shutdown ok\n");
-	}
-	closesocket(sock);
 
 	return 0;
 }
