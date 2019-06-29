@@ -15,7 +15,7 @@ void oshibka(char *oshibkaname)
 
 struct sockaddr* resolve(char* hostname)
 {
-	struct sockaddr_in client;
+	static struct sockaddr_in client;
 	client.sin_addr.s_addr = inet_addr(hostname);
 	client.sin_family = AF_INET;
 	client.sin_port = htons(502);
