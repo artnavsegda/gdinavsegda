@@ -15,8 +15,27 @@ void oshibka(char *oshibkaname)
 	exit(1);
 }
 
-int main()
+struct sockaddr* resolve(char* hostname)
 {
+	static struct sockaddr_in client;
+	struct hostent* host = gethostbyname(hostname);
+
+	if (host != NULL)
+		client.sin_addr.s_addr = *(u_long*)host->h_addr_list[0];
+	else
+		client.sin_addr.s_addr = inet_addr(hostname);
+	client.sin_family = AF_INET;
+	client.sin_port = htons(80);
+	return (struct sockaddr*) &client;
+}
+
+int main(int argc, char* argv[])
+{
+	if (argc != 2)
+	{
+		return 0;
+	}
+
 	WSADATA wsaData;
 	int iResult;
 
@@ -44,13 +63,7 @@ int main()
 		printf("socket ok\n");
 	}
 
-	struct sockaddr_in client = {
-		.sin_addr.s_addr = inet_addr("192.168.1.150"),
-		.sin_family = AF_INET,
-		.sin_port = htons(502)
-	};
-
-	if (connect(sock, (struct sockaddr *)&client, sizeof(client)) == SOCKET_ERROR)
+	if (connect(sock, resolve(argv[1]), sizeof(struct sockaddr_in)) == SOCKET_ERROR)
 	{
 		oshibka("connect");
 		closesocket(sock);
