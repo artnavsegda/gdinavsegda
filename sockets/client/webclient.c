@@ -4,7 +4,9 @@
 
 #pragma comment(lib, "Wsock32.lib")
 
-const char ask[] = "GET / HTTP/1.0\n\n";
+const char ask[] = "GET / HTTP/1.1\r\nHost: artnavsegda.herokuapp.com\r\n\r\n";
+
+char buf[1000];
 
 void oshibka(char *oshibkaname)
 {
@@ -83,6 +85,23 @@ int main(int argc, char* argv[])
 	else
 	{
 		printf("send %d bytes ok\n", numwrite);
+	}
+
+	int numread = recv(sock,buf,1000,0);
+	if (numread == -1)
+	{
+		perror("recv error");
+		close(sock);
+		return 1;
+	}
+	else
+	{
+		printf("recv %d bytes\n",numread);
+		for (int i=0; i<numread;i++)
+		{
+			printf("%c",buf[i]);
+		}
+		printf("\n");
 	}
 
 	if (shutdown(sock, 2) == SOCKET_ERROR)
