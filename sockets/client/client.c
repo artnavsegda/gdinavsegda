@@ -13,8 +13,13 @@ void oshibka(char *oshibkaname)
 	exit(1);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+	if (argc != 2)
+	{
+		return 0;
+	}
+
 	WSADATA wsaData;
 	int iResult;
 
@@ -43,7 +48,7 @@ int main()
 	}
 
 	struct sockaddr_in client = {
-		.sin_addr.s_addr = inet_addr("192.168.1.150"),
+		.sin_addr.s_addr = inet_addr(argv[1]),
 		.sin_family = AF_INET,
 		.sin_port = htons(502)
 	};

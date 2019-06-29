@@ -15,6 +15,11 @@ void oshibka(char* oshibkaname)
 
 int main(int argc, char *argv[])
 {
+	if (argc != 2)
+	{
+		return 0;
+	}
+
 	WSADATA wsaData;
 	int iResult;
 	struct hostent* host;
@@ -31,7 +36,7 @@ int main(int argc, char *argv[])
 		printf("WSAStartup ok\n");
 	}
 
-	host = gethostbyname("artnavsegda.herokuapp.com");
+	host = gethostbyname(argv[1]);
 
 	if (host != NULL)
 	{
