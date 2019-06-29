@@ -13,7 +13,7 @@ void oshibka(char* oshibkaname)
 	exit(1);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
 	WSADATA wsaData;
 	int iResult;
