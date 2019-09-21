@@ -31,7 +31,7 @@ int main()
 		printf("WSAStartup ok\n");
 	}
 
-	SOCKET sock = socket(PF_INET, SOCK_RAW, IPPROTO_UDP);
+	SOCKET sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 	if (sock == INVALID_SOCKET)
 	{
