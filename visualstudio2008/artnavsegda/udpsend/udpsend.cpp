@@ -44,11 +44,10 @@ int main()
 		printf("socket ok\n");
 	}
 
-	struct sockaddr_in other = {
-		.sin_addr.s_addr = inet_addr("127.0.0.1"),
-		.sin_family = AF_INET,
-		.sin_port = htons(1100)
-	};
+	struct sockaddr_in other = {};
+	other.sin_addr.s_addr = inet_addr("127.0.0.1");
+	other.sin_family = AF_INET;
+	other.sin_port = htons(1100);
 
 	int slen = sizeof(other);
 
