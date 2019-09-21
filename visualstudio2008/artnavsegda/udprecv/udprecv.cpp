@@ -15,7 +15,7 @@ void oshibka(char *oshibkaname)
 
 int main()
 {
-	char buf[100];
+	char buf[1000];
 	WSADATA wsaData;
 	int iResult;
 
@@ -31,7 +31,7 @@ int main()
 		printf("WSAStartup ok\n");
 	}
 
-	SOCKET sock = socket(PF_INET, SOCK_RAW, IPPROTO_UDP);
+	SOCKET sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 	if (sock == INVALID_SOCKET)
 	{
