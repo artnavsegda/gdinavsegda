@@ -15,7 +15,7 @@ void oshibka(char *oshibkaname)
 
 int main()
 {
-	unsigned char buf[100];
+	char buf[100];
 	WSADATA wsaData;
 	int iResult;
 
