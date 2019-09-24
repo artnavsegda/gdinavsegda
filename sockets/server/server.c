@@ -46,7 +46,7 @@ int main()
 
 	struct sockaddr_in server = {
 		.sin_family = AF_INET,
-		.sin_port = htons(1100),
+		.sin_port = htons(9090),
 		.sin_addr.s_addr = INADDR_ANY
 	};
 
