@@ -16,6 +16,7 @@ void oshibka(char *oshibkaname)
 int main()
 {
 	char buf[1000];
+	int buflen = 0;
 	WSADATA wsaData;
 	int iResult;
 
@@ -89,9 +90,10 @@ int main()
 		{
 			printf("accept ok\n");
 		}
-		while (recv(msgsock, buf, sizeof(buf), 0) != SOCKET_ERROR)
+		while ((buflen = recv(msgsock, buf, sizeof(buf), 0)) != SOCKET_ERROR)
 		{
-			printf("recv: %s\n", buf);
+			buf[buflen] = '\0';
+			printf("recv %d: %s\n", buflen, buf);
 		}
 		if (shutdown(msgsock, 2) == SOCKET_ERROR)
 		{
