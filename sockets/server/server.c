@@ -15,7 +15,7 @@ void oshibka(char *oshibkaname)
 
 int main()
 {
-	int buf[100];
+	char buf[1000];
 	WSADATA wsaData;
 	int iResult;
 
@@ -89,8 +89,10 @@ int main()
 		{
 			printf("accept ok\n");
 		}
-		while (recv(msgsock, buf, 100, 0) != SOCKET_ERROR)
-			;
+		while (recv(msgsock, buf, sizeof(buf), 0) != SOCKET_ERROR)
+		{
+			printf("recv: %s\n", buf);
+		}
 		if (shutdown(msgsock, 2) == SOCKET_ERROR)
 		{
 			oshibka("shutdown");
