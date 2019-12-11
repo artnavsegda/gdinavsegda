@@ -23,7 +23,7 @@ struct sockaddr* resolve(char* hostname)
 	else
 		client.sin_addr.s_addr = inet_addr(hostname);
 	client.sin_family = AF_INET;
-	client.sin_port = htons(8888);
+	client.sin_port = htons(9999);
 	return (struct sockaddr*) &client;
 }
 
