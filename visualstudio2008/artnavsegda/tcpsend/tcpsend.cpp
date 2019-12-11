@@ -13,10 +13,27 @@ void oshibka(char *oshibkaname)
 	exit(1);
 }
 
-char package[] = "hello world\n";
-
-int main()
+struct sockaddr* resolve(char* hostname)
 {
+	static struct sockaddr_in client;
+	struct hostent* host = gethostbyname(hostname);
+
+	if (host != NULL)
+		client.sin_addr.s_addr = *(u_long*)host->h_addr_list[0];
+	else
+		client.sin_addr.s_addr = inet_addr(hostname);
+	client.sin_family = AF_INET;
+	client.sin_port = htons(8888);
+	return (struct sockaddr*) &client;
+}
+
+int main(int argc, char* argv[])
+{
+	if (argc != 2)
+	{
+		return 0;
+	}
+
 	WSADATA wsaData;
 	int iResult;
 
@@ -32,7 +49,7 @@ int main()
 		printf("WSAStartup ok\n");
 	}
 
-	SOCKET sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (sock == INVALID_SOCKET)
 	{
 		oshibka("socket");
@@ -44,14 +61,20 @@ int main()
 		printf("socket ok\n");
 	}
 
-	struct sockaddr_in other = {};
-	other.sin_addr.s_addr = inet_addr("127.0.0.1");
-	other.sin_family = AF_INET;
-	other.sin_port = htons(1100);
+	if (connect(sock, resolve(argv[1]), sizeof(struct sockaddr_in)) == SOCKET_ERROR)
+	{
+		oshibka("connect");
+		closesocket(sock);
+		exit(0);
+	}
+	else
+	{
+		printf("connect ok\n");
+	}
 
-	int slen = sizeof(other);
+	char test[] = "hello";
 
-	int numwrite = sendto(sock, package, sizeof(package), 0, (struct sockaddr *)&other, slen);
+	int numwrite = send(sock, test, sizeof(test), 0);
 
 	if (numwrite == SOCKET_ERROR)
 	{
