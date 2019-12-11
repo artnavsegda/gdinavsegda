@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "udpsend", "udpsend\udpsend.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "udprecv", "udprecv\udprecv.vcproj", "{090BA134-EBFB-4DEB-81EB-96B1AC42EF1F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tcpsend", "tcpsend\tcpsend.vcproj", "{23826F91-447E-4825-AA8A-3CA5B2B92AC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{090BA134-EBFB-4DEB-81EB-96B1AC42EF1F}.Debug|Win32.Build.0 = Debug|Win32
 		{090BA134-EBFB-4DEB-81EB-96B1AC42EF1F}.Release|Win32.ActiveCfg = Release|Win32
 		{090BA134-EBFB-4DEB-81EB-96B1AC42EF1F}.Release|Win32.Build.0 = Release|Win32
+		{23826F91-447E-4825-AA8A-3CA5B2B92AC5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{23826F91-447E-4825-AA8A-3CA5B2B92AC5}.Debug|Win32.Build.0 = Debug|Win32
+		{23826F91-447E-4825-AA8A-3CA5B2B92AC5}.Release|Win32.ActiveCfg = Release|Win32
+		{23826F91-447E-4825-AA8A-3CA5B2B92AC5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
