@@ -31,9 +31,9 @@ char package[] = "hello world\n";
 
 int main(int argc, char* argv[])
 {
-	if (argc != 3)
+	if (argc != 4)
 	{
-		puts("usage: udpsend <ipaddr> <port>");
+		puts("usage: udpsend <ipaddr> <port> <payload>");
 		return 0;
 	}
 
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 		printf("socket ok\n");
 	}
 
-	int numwrite = sendto(sock, package, sizeof(package), 0, resolve(argv[1], argv[2]), sizeof(sockaddr_in));
+	int numwrite = sendto(sock, argv[3], strlen(argv[3]), 0, resolve(argv[1], argv[2]), sizeof(sockaddr_in));
 
 	if (numwrite == SOCKET_ERROR)
 	{
