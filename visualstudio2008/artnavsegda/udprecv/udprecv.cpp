@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 {
 	if (argc != 2)
 	{
-		puts("usage: tcpsend <port>");
+		puts("usage: udprecv <port>");
 		return 0;
 	}
 
