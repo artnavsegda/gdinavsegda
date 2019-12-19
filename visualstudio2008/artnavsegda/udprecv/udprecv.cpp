@@ -15,6 +15,12 @@ void oshibka(char *oshibkaname)
 
 int main(int argc, char* argv[])
 {
+	if (argc != 2)
+	{
+		puts("usage: tcpsend <port>");
+		return 0;
+	}
+
 	char buf[1000];
 	WSADATA wsaData;
 	int iResult;
@@ -46,7 +52,7 @@ int main(int argc, char* argv[])
 
 	struct sockaddr_in server = {};
 	server.sin_family = AF_INET;
-	server.sin_port = htons(1100);
+	server.sin_port = htons(atoi(argv[1]));
 	server.sin_addr.s_addr = INADDR_ANY;
 
 	struct sockaddr_in other;
