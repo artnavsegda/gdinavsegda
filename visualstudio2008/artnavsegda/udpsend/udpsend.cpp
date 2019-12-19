@@ -15,7 +15,7 @@ void oshibka(char *oshibkaname)
 
 char package[] = "hello world\n";
 
-int main()
+int main(int argc, char* argv[])
 {
 	WSADATA wsaData;
 	int iResult;
