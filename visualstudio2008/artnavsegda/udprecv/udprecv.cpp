@@ -70,20 +70,22 @@ int main(int argc, char* argv[])
 		printf("bind ok\n");
 	}
 
-	int numread = recvfrom(sock, buf, sizeof(buf), 0, (struct sockaddr *)&other, &slen);
-
-	if (numread == SOCKET_ERROR)
+	while(1)
 	{
-		oshibka("recvfrom");
-	}
-	else
-	{
-		printf("recv %d bytes\n", numread);
-		for (int i = 0; i<numread; i++)
+		int numread = recvfrom(sock,buf,sizeof(buf),0,(struct sockaddr *)&other, &slen);
+		if (numread == -1)
 		{
-			printf("0x%02X, ", buf[i]);
+			perror("recv error");
 		}
-		printf("\n");
+		else
+		{
+			printf("recv %d bytes\n",numread);
+			for (int i=0; i<numread;i++)
+			{
+				printf("0x%02X, ",buf[i]);
+			}
+			printf("\n");
+		}
 	}
 
 	if (shutdown(sock, 2) == SOCKET_ERROR)
