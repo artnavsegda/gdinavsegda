@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "udprecv", "udprecv\udprecv.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tcpsend", "tcpsend\tcpsend.vcproj", "{23826F91-447E-4825-AA8A-3CA5B2B92AC5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glcube", "glcube\glcube.vcproj", "{F8D95B4D-CEC6-4B9E-BA15-209BB88C3E07}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glpentagon", "glpentagon\glpentagon.vcproj", "{19A09AF1-4614-49BA-A26A-42968B2A7F4C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +29,14 @@ Global
 		{23826F91-447E-4825-AA8A-3CA5B2B92AC5}.Debug|Win32.Build.0 = Debug|Win32
 		{23826F91-447E-4825-AA8A-3CA5B2B92AC5}.Release|Win32.ActiveCfg = Release|Win32
 		{23826F91-447E-4825-AA8A-3CA5B2B92AC5}.Release|Win32.Build.0 = Release|Win32
+		{F8D95B4D-CEC6-4B9E-BA15-209BB88C3E07}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F8D95B4D-CEC6-4B9E-BA15-209BB88C3E07}.Debug|Win32.Build.0 = Debug|Win32
+		{F8D95B4D-CEC6-4B9E-BA15-209BB88C3E07}.Release|Win32.ActiveCfg = Release|Win32
+		{F8D95B4D-CEC6-4B9E-BA15-209BB88C3E07}.Release|Win32.Build.0 = Release|Win32
+		{19A09AF1-4614-49BA-A26A-42968B2A7F4C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{19A09AF1-4614-49BA-A26A-42968B2A7F4C}.Debug|Win32.Build.0 = Debug|Win32
+		{19A09AF1-4614-49BA-A26A-42968B2A7F4C}.Release|Win32.ActiveCfg = Release|Win32
+		{19A09AF1-4614-49BA-A26A-42968B2A7F4C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
