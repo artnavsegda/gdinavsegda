@@ -3,6 +3,7 @@
    the Win32 API. */
 
 #include <stdio.h>
+#define _USE_MATH_DEFINES // for C
 #include <math.h>
 
 #include <windows.h>			/* must include this before GL/gl.h */
@@ -71,7 +72,7 @@ reshape(int width, int height)
     glTranslatef(0.0f, 0.0f, -4.0f);
 }
 
-const double ugol = 108.07;
+const double ugol = M_PI*72/180;
 
 double getcortx(int num, double radius)
 {

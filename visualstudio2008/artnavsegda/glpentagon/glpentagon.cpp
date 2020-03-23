@@ -5,6 +5,7 @@
 
 
 #include <stdio.h>
+#define _USE_MATH_DEFINES // for C
 #include <math.h>
 
 #include <windows.h>			/* must include this before GL/gl.h */
@@ -17,16 +18,29 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-const double ugol = 108.07;
+const double ugol = M_PI*72/180;
 
-double getcortx(int num, double radius)
+double getcortx(int num, double radius, int angle)
 {
-	return cos(ugol*(double)num)*radius;
+	return cos(M_PI*angle/180*(double)num)*radius;
 }
 
-double getcorty(int num, double radius)
+double getcorty(int num, double radius, int angle)
 {
-	return sin(ugol*(double)num)*radius;
+	return sin(M_PI*angle/180*(double)num)*radius;
+}
+
+void regularPolygon(float radius, int sides)
+{
+	int angle = 360/sides;
+
+	glBegin(GL_POLYGON);
+	for (int i = 0; i < sides; ++i)
+	{
+		glIndexi(i);
+		glVertex2d(getcortx(i,radius,angle), getcorty(i,radius,angle));
+	}
+	glEnd();
 }
 
 void
@@ -48,9 +62,11 @@ display()
  //   B1; B2; B3; B4; B5;
 	//glEnd();
 
-	glBegin(GL_TRIANGLE_FAN);
-    B0; B1; B2; B3; B4; B5; B1;
-	glEnd();
+	//glBegin(GL_TRIANGLE_FAN);
+ //   B0; B1; B2; B3; B4; B5; B1;
+	//glEnd();
+
+	regularPolygon(1.0, 8);
 
     glFlush();
 }
