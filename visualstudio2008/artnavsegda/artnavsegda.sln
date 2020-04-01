@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glcube", "glcube\glcube.vcp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glpentagon", "glpentagon\glpentagon.vcproj", "{19A09AF1-4614-49BA-A26A-42968B2A7F4C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfchello", "mfchello\mfchello.vcproj", "{16925C87-5F50-4B0F-975B-19A27AE03B94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -37,6 +39,10 @@ Global
 		{19A09AF1-4614-49BA-A26A-42968B2A7F4C}.Debug|Win32.Build.0 = Debug|Win32
 		{19A09AF1-4614-49BA-A26A-42968B2A7F4C}.Release|Win32.ActiveCfg = Release|Win32
 		{19A09AF1-4614-49BA-A26A-42968B2A7F4C}.Release|Win32.Build.0 = Release|Win32
+		{16925C87-5F50-4B0F-975B-19A27AE03B94}.Debug|Win32.ActiveCfg = Debug|Win32
+		{16925C87-5F50-4B0F-975B-19A27AE03B94}.Debug|Win32.Build.0 = Debug|Win32
+		{16925C87-5F50-4B0F-975B-19A27AE03B94}.Release|Win32.ActiveCfg = Release|Win32
+		{16925C87-5F50-4B0F-975B-19A27AE03B94}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
