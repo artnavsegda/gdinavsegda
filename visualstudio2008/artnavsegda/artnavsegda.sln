@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glpentagon", "glpentagon\gl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfchello", "mfchello\mfchello.vcproj", "{16925C87-5F50-4B0F-975B-19A27AE03B94}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfcgdi", "mfcgdi\mfcgdi.vcproj", "{D6BB63C0-32FA-4F19-B9A3-3EC260CFEE80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -43,6 +45,10 @@ Global
 		{16925C87-5F50-4B0F-975B-19A27AE03B94}.Debug|Win32.Build.0 = Debug|Win32
 		{16925C87-5F50-4B0F-975B-19A27AE03B94}.Release|Win32.ActiveCfg = Release|Win32
 		{16925C87-5F50-4B0F-975B-19A27AE03B94}.Release|Win32.Build.0 = Release|Win32
+		{D6BB63C0-32FA-4F19-B9A3-3EC260CFEE80}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D6BB63C0-32FA-4F19-B9A3-3EC260CFEE80}.Debug|Win32.Build.0 = Debug|Win32
+		{D6BB63C0-32FA-4F19-B9A3-3EC260CFEE80}.Release|Win32.ActiveCfg = Release|Win32
+		{D6BB63C0-32FA-4F19-B9A3-3EC260CFEE80}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
