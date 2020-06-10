@@ -29,9 +29,9 @@ struct sockaddr* resolve(char* hostname, char* port)
 
 int main(int argc, char* argv[])
 {
-	if (argc != 3)
+	if (argc != 4)
 	{
-		puts("usage: tcpsend <ipaddr> <port>");
+		puts("usage: tcpsend <ipaddr> <port> <data>");
 		return 0;
 	}
 
@@ -73,9 +73,7 @@ int main(int argc, char* argv[])
 		printf("connect ok\n");
 	}
 
-	char test[] = "hello";
-
-	int numwrite = send(sock, test, sizeof(test), 0);
+	int numwrite = send(sock, argv[3], strlen(argv[3]), 0);
 
 	if (numwrite == SOCKET_ERROR)
 	{
