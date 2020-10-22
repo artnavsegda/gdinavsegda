@@ -95,6 +95,10 @@ int main(int argc, char* argv[])
 		printf("\n");
 	}
 
+	
+
+
+
 	if (shutdown(sock, 2) == SOCKET_ERROR)
 	{
 		oshibka("shutdown");
