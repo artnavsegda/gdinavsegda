@@ -29,14 +29,35 @@ struct sockaddr* resolve(char* hostname)
 	return (struct sockaddr*) &client;
 }
 
-void process(char *buf, int numread)
+void process(char *buf, int numread, SOCKET sock)
 {
+	int numwrite = 0;
 	printf("recv %d bytes\n",numread);
 	for (int i=0; i<numread;i++)
 	{
 		printf("0x%02X ",buf[i]);
 	}
 	printf("\n");
+
+	int payloadLength = buf[2];
+	char * payload = &buf[3];
+
+	switch (buf[0])
+	{
+		case 0x0f:
+			puts("Client registration request");
+			numwrite = send(sock, "\x01\x00\x0b\x00\x00\x00\x00\x00" "\x03" "\x40\xff\xff\xf1\x01", 14, 0);
+			printf("%d bytes sent\n", numwrite);
+		case 0x02:
+			puts("registration result");
+			if (payloadLength == 4 && (memcmp(payload,"\x00\x00\x00\x1f",4) == 0))
+			{
+				puts("registration ok");
+			}
+		break;
+		default:
+		break;
+	}
 }
 
 int main(int argc, char* argv[])
@@ -87,17 +108,20 @@ int main(int argc, char* argv[])
 
 	char buf[100];
 
-	int numread = recv(sock,buf,100,0);
+	while(1)
+	{
+		int numread = recv(sock,buf,100,0);
 
-    if (numread == -1)
-	{
-		oshibka("recv error");
-		closesocket(sock);
-		return 1;
-	}
-	else
-	{
-		process(buf,numread);
+		if (numread == -1)
+		{
+			oshibka("recv error");
+			closesocket(sock);
+			return 1;
+		}
+		else
+		{
+			process(buf,numread,sock);
+		}
 	}
 
 	if (shutdown(sock, 2) == SOCKET_ERROR)
