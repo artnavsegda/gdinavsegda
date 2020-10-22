@@ -29,6 +29,16 @@ struct sockaddr* resolve(char* hostname)
 	return (struct sockaddr*) &client;
 }
 
+void process(char *buf, int numread)
+{
+	printf("recv %d bytes\n",numread);
+	for (int i=0; i<numread;i++)
+	{
+		printf("0x%02X ",buf[i]);
+	}
+	printf("\n");
+}
+
 int main(int argc, char* argv[])
 {
 	if (argc != 2)
@@ -87,17 +97,8 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		printf("recv %d bytes\n",numread);
-		for (int i=0; i<numread;i++)
-		{
-			printf("0x%02X ",buf[i]);
-		}
-		printf("\n");
+		process(buf,numread);
 	}
-
-	
-
-
 
 	if (shutdown(sock, 2) == SOCKET_ERROR)
 	{
