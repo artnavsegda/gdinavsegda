@@ -40,6 +40,8 @@ void process(char *buf, int numread, SOCKET sock)
 	printf("\n");
 
 	int payloadLength = buf[2];
+	printf("payload length %d\n",payloadLength);
+
 	char * payload = &buf[3];
 
 	switch (buf[0])
@@ -47,17 +49,25 @@ void process(char *buf, int numread, SOCKET sock)
 		case 0x0f:
 			puts("Client registration request");
 			numwrite = send(sock, "\x01\x00\x0b\x00\x00\x00\x00\x00" "\x03" "\x40\xff\xff\xf1\x01", 14, 0);
-			printf("%d bytes sent\n", numwrite);
 		case 0x02:
 			puts("registration result");
 			if (payloadLength == 4 && (memcmp(payload,"\x00\x00\x00\x1f",4) == 0))
 			{
 				puts("registration ok");
+				numwrite = send(sock, "\x05\x00\x05\x00\x00\x02\x03\x00", 8, 0);
 			}
 		break;
+		case 0x05:
+			puts("data");
+		break;
+		case 0x0D:
+			puts("heartbeat");
 		default:
 		break;
 	}
+
+	if (numwrite > 0)
+		printf("%d bytes sent\n", numwrite);
 }
 
 int main(int argc, char* argv[])
@@ -106,11 +116,11 @@ int main(int argc, char* argv[])
 		printf("connect ok\n");
 	}
 
-	char buf[100];
+	char buf[1000];
 
 	while(1)
 	{
-		int numread = recv(sock,buf,100,0);
+		int numread = recv(sock,buf,1000,0);
 
 		if (numread == -1)
 		{
