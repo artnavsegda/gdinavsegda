@@ -7,7 +7,7 @@ int main()
 {
     printf("start\n");
 
-    HMODULE pilotNt = LoadLibraryA("pilot_nt.dll");
+    HMODULE pilotNt = LoadLibrary(L"pilot_nt.dll");
 
     if (!pilotNt)
     {
@@ -16,10 +16,10 @@ int main()
     }
 
     try {
-        card_authorize9 function = (card_authorize9)GetProcAddress(pilotNt, "card_authorize9");
+        card_authorize9 function = (card_authorize9)GetProcAddress(pilotNt, "_card_authorize9");
         if (!function)
         {
-            printf("pilot_nt.dll not found\n");
+            printf("card_authorize9 not found\n");
             return -2;
         }
     }
