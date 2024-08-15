@@ -1,7 +1,8 @@
 #include <windows.h>
 #include <stdio.h>
+#include "pilot_nt.h"
 
-typedef int (*card_authorize9)(char* track2, struct auth_answer9* auth_answer);
+typedef int (*dynamic_function)(char* track2, struct auth_answer9* auth_answer);
 
 int main()
 {
@@ -16,12 +17,21 @@ int main()
     }
 
     try {
-        card_authorize9 function = (card_authorize9)GetProcAddress(pilotNt, "_card_authorize9");
-        if (!function)
+        dynamic_function card_authorize9Fn = (dynamic_function)GetProcAddress(pilotNt, "card_authorize9");
+        if (!card_authorize9Fn)
         {
             printf("card_authorize9 not found\n");
             return -2;
         }
+
+        auth_answer9 argument;
+        memset(&argument, 0, sizeof(argument));
+        argument.ans.TType = OP_PURCHASE;
+        argument.ans.Amount = 100000;
+        printf("Let's try to pay!\n");
+        DWORD result = card_authorize9Fn(NULL, &argument);
+        printf("Operation completed with code %d \n'", result);
+
     }
     catch (...)
     {
