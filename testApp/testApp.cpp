@@ -27,7 +27,7 @@ int main()
         auth_answer9 argument;
         memset(&argument, 0, sizeof(argument));
         argument.ans.TType = OP_PURCHASE;
-        argument.ans.Amount = 100000;
+        argument.ans.Amount = 100;
         printf("Let's try to pay!\n");
         DWORD result = card_authorize9Fn(NULL, &argument);
         printf("Operation completed with code %d \n'", result);
