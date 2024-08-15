@@ -17,7 +17,7 @@ int main()
     }
 
     try {
-        dynamic_function card_authorize9Fn = (dynamic_function)GetProcAddress(pilotNt, "card_authorize9");
+        dynamic_function card_authorize9Fn = (dynamic_function)GetProcAddress(pilotNt, "_card_authorize9");
         if (!card_authorize9Fn)
         {
             printf("card_authorize9 not found\n");
