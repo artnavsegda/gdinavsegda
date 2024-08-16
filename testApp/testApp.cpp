@@ -31,6 +31,15 @@ int main()
         printf("Let's try to pay!\n");
         DWORD result = card_authorize9Fn(NULL, &argument);
         printf("Operation completed with code %d \n'", result);
+        printf("Auth result is %s \n'", argument.ans.RCode);
+        //printf("Auth desc is is %s \n'", argument.ans.AMessage);
+
+        int wchars_num = MultiByteToWideChar(CP_UTF8, 0, argument.ans.AMessage, -1, NULL, 0);
+        wchar_t* wstr = new wchar_t[wchars_num];
+        MultiByteToWideChar(CP_UTF8, 0, argument.ans.AMessage, -1, wstr, wchars_num);
+        // do whatever with wstr
+        printf("Auth desc is is %s \n'", wstr);
+        delete[] wstr;
 
     }
     catch (...)
