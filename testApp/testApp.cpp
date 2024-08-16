@@ -10,9 +10,7 @@ int main(int argc, char* argv[])
 
     int amount = atoi(argv[1]);
 
-    printf("%d rubles", amount / 100);
-
-    return -1;
+    printf("%d rubles\n", amount / 100);
 
     HMODULE pilotNt = LoadLibrary(L"pilot_nt.dll");
 
