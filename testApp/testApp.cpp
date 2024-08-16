@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 
     printf("%d rubles", amount / 100);
 
-    return;
+    return -1;
 
     HMODULE pilotNt = LoadLibrary(L"pilot_nt.dll");
 
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
         auth_answer9 argument;
         memset(&argument, 0, sizeof(argument));
         argument.ans.TType = OP_PURCHASE;
-        argument.ans.Amount = 100;
+        argument.ans.Amount = amount;
         printf("Let's try to pay!\n");
         DWORD result = card_authorize9Fn(NULL, &argument);
         printf("Operation completed with code %d \n'", result);
