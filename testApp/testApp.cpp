@@ -4,9 +4,15 @@
 
 typedef int (*dynamic_function)(char* track2, struct auth_answer9* auth_answer);
 
-int main()
+int main(int argc, char* argv[])
 {
     printf("start\n");
+
+    int amount = atoi(argv[1]);
+
+    printf("%d rubles", amount / 100);
+
+    return;
 
     HMODULE pilotNt = LoadLibrary(L"pilot_nt.dll");
 
